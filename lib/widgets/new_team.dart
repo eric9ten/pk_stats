@@ -57,23 +57,28 @@ class _NewTeamState extends State<NewTeam> {
     Navigator.pop(context);
   }
 
-  void _presentColorPicker() {
+  void _presentColorPicker() {    
+    final availColors = [ Colors.black, Colors.grey, Colors.white, Colors.red, Colors.orange, Colors.yellow,
+      Colors.green, Colors.blue, Colors.indigo, Colors.purple, Colors.brown ];
+    
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Pick the team\'s color!'),
-            content: SingleChildScrollView(
-              child: BlockPicker(
-                pickerColor: _teamColor, //default color
-                onColorChanged: (Color color) {
-                  //on the color picked
-                  setState(() {
-                    _teamColor = color;
-                  });
-                },
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+                child: BlockPicker(
+                  availableColors: availColors,
+                  pickerColor: _teamColor, //default color
+                  onColorChanged: (Color color) {
+                    //on the color picked
+                    setState(() {
+                      _teamColor = color;
+                    });
+                  },
+                ),
               ),
-            ),
             actions: <Widget>[
               ElevatedButton(
                 child: const Text('Okay'),
@@ -131,11 +136,10 @@ class _NewTeamState extends State<NewTeam> {
               child: Column (
                 children: [
                   Text('Add Team',
-                    style: GoogleFonts.dosis(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                    ),
+                    style: 
+                    Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                    )
                   ),
                   const SizedBox(height: 20),      
                   Row(
@@ -157,9 +161,10 @@ class _NewTeamState extends State<NewTeam> {
                             decoration: const InputDecoration(
                               label: Text('Team Name'),
                             ),
-                            style: const TextStyle (
-                              color: Colors.white,
-                            ),
+                            style: 
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                              )
                           ),
                         ),
                       ),
@@ -176,34 +181,39 @@ class _NewTeamState extends State<NewTeam> {
                             decoration: const InputDecoration(
                               label: Text('Team Abbrev'),
                             ),
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: 
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                              )
                           ),
                       ),
                       const SizedBox(width: 40),
                       Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: _presentColorPicker,
-                            child: const Text("Team Color"),
+                        children: [   
+                          Text("Team Color",
+                            style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                color: Theme.of(context).colorScheme.secondary
+                              )
                           ),
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: _teamColor,
-                                borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                                // border: if (teamColor = Colors.white ) {
-                                //   Border.all(color: Colors.grey);
-                                // } else {
-                                //   Border.all(color: teamColor);
-                                // }
+                          const SizedBox(height: 16),
+                          FilledButton(
+                            onPressed: _presentColorPicker,
+                            style: FilledButton.styleFrom (
+                              backgroundColor: const Color.fromARGB(0, 240, 240, 240),
+                            ),
+                            child: SizedBox(
+                              height: 32,
+                              width: 32,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: _teamColor,
+                                  borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+                                ),
                               ),
                             ),
                           ),
-                        ],
+                          ],
                       ),
                     ],
                   ),      
@@ -212,13 +222,25 @@ class _NewTeamState extends State<NewTeam> {
                     children: [
                       const Spacer(),
                       TextButton(
+                        style: TextButton.styleFrom (
+                          textStyle:   
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                              // color: Theme.of(context).colorScheme.onSecondary
+                            ),
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         child: const Text('Cancel'),
                       ),
-                      ElevatedButton(
+                      TextButton(
                         onPressed: _updateTeam,
+                        style: TextButton.styleFrom (
+                          textStyle:   
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.primary
+                            ),
+                        ),
                         child: const Text('Add Team'),
                       ),
                     ],

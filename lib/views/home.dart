@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pk_stats/views/game_setup.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.title});
-
   final String title;
 
   @override
@@ -22,7 +22,11 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               TextButton(
-                onPressed: () {}, 
+                onPressed: () {
+                  Navigator.push(
+                    context, MaterialPageRoute(builder: (ctx) => const GameSetupView())
+                    );
+                }, 
                 style: TextButton.styleFrom(
                   foregroundColor:  const Color.fromARGB(255, 130, 130, 130),
                   padding: const EdgeInsets.fromLTRB(40, 8, 40, 8),

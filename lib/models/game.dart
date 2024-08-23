@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:pk_stats/models/team.dart';
+import 'package:pk_stats/models/game_stats.dart';
 
 final formatter = DateFormat.yMd();
 
@@ -21,7 +22,9 @@ class Game {
   final Team teamA;
   final Team teamB;
   final bool isAHome;
-  bool? aIsDefendingLeft;
+  GameStats? teamAStats;
+  GameStats? teamBStats;
+  bool? aIsDefendingRight;
 
   String get formattedDate {
     return formatter.format(date);
