@@ -172,12 +172,15 @@ class _NewTeamState extends State<NewTeam> {
                   ),
                   const SizedBox(height: 20),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Expanded(
+                      SizedBox(
+                        width: 100,
                         child: 
                           TextField(
                             controller: _abbrevController,
                             maxLength: 4,
+                            textCapitalization: TextCapitalization.characters,
                             decoration: const InputDecoration(
                               label: Text('Team Abbrev'),
                             ),

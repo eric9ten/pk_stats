@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:pk_stats/models/game.dart';
@@ -27,8 +25,11 @@ class _GoalSetupView extends State<GoalSetupView> {
 
     Navigator.push(
       context, MaterialPageRoute(builder: (ctx) => 
-        GameTrackerView(game: gameInfo,
-      ))
+        GameTrackerView(
+          game: gameInfo, 
+          gameHalf: 1,
+        )
+      )
     );
   }
 
