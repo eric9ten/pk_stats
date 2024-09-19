@@ -30,15 +30,74 @@ class _GameTrackerView extends State<GameTrackerView> {
   GameStats rightStats = GameStats(
     goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
     tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
+  Team leftTeam = Team(name: '', abbrev: '', color: '');
+  Team rightTeam = Team(name: '', abbrev: '', color: '');
+  Game gameInfo =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
+    teamA: Team(name: '', abbrev: '', color: ''),
+    teamB: Team(name: '', abbrev: '', color: ''), 
+    isAHome: true);
 
   int _stat = 0;
 
   void _toReview() {
+
+    if (widget.game.aIsDefendingRight!) {
+      if (widget.gameHalf == 1) {
+        widget.game.teamB = leftTeam;
+        widget.game.teamBStats = leftStats;
+        widget.game.teamA = rightTeam;
+        widget.game.teamAStats = rightStats;
+        // leftTeam = gameInfo.teamB;
+        // leftStats = gameInfo.teamBStats!;
+        // rightTeam = gameInfo.teamA;
+        // rightStats = gameInfo.teamAStats!;
+      } else {
+        widget.game.teamA = leftTeam;
+        widget.game.teamAStats = leftStats;
+        widget.game.teamB = rightTeam;
+        widget.game.teamBStats = rightStats;
+      }
+    } else {
+      if (widget.gameHalf == 2) {
+        widget.game.teamA = leftTeam;
+        widget.game.teamAStats = leftStats;
+        widget.game.teamB = rightTeam;
+        widget.game.teamBStats = rightStats;
+        // leftTeam = gameInfo.teamA;
+        // leftStats = gameInfo.teamAStats!;
+        // rightTeam = gameInfo.teamB;
+        // rightStats = gameInfo.teamBStats!;
+      } else {
+        widget.game.teamB = leftTeam;
+        widget.game.teamBStats = leftStats;
+        widget.game.teamA = rightTeam;
+        widget.game.teamAStats = rightStats;
+        // leftTeam = gameInfo.teamB;
+        // leftStats = gameInfo.teamBStats!;
+        // rightTeam = gameInfo.teamA;
+        // rightStats = gameInfo.teamAStats!;
+      }
+    }
+
+    print('Team A Goals...');
+    print(widget.game.teamAStats?.goals);
     Navigator.push(
       context, MaterialPageRoute(builder: (ctx) => 
         GameReviewView(gameHalf: widget.gameHalf, game: widget.game)
       )
     );
+  }
+
+  void _updateAGoals(int count) {
+    setState(() {
+      leftStats.goals = count;
+    });
+  }
+
+  void _updateBGoals(int count) {
+    setState(() {
+      rightStats.goals = count;
+    });
   }
 
   void _updateAPasses(int count) {
@@ -149,34 +208,35 @@ class _GameTrackerView extends State<GameTrackerView> {
     });
   }
 
-
   @override 
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    var gameInfo = widget.game;
     Team leftTeam;
     Team rightTeam;
 
-    print(gameInfo.aIsDefendingRight);
     if (gameInfo.aIsDefendingRight!) {
       if (widget.gameHalf == 1) {
         leftTeam = gameInfo.teamB;
+        leftStats = widget.game.teamBStats as GameStats; //gameInfo.teamBStats!;
         rightTeam = gameInfo.teamA;
+        rightStats = widget.game.teamAStats as GameStats;
       } else {
         leftTeam = gameInfo.teamA;
-        leftStats = gameInfo.teamAStats!;
+        leftStats = gameInfo.teamAStats as GameStats;
         rightTeam = gameInfo.teamB;
-        rightStats = gameInfo.teamBStats!;
+        rightStats = widget.game.teamBStats as GameStats; //gameInfo.teamBStats!;
       }
     } else {
       if (widget.gameHalf == 1) {
         leftTeam = gameInfo.teamA;
+        leftStats = widget.game.teamAStats!;  //gameInfo.teamAStats!;
         rightTeam = gameInfo.teamB;
+        rightStats = gameInfo.teamBStats!;
       } else {
         leftTeam = gameInfo.teamB;
-        leftStats = gameInfo.teamBStats!;
+        leftStats = widget.game.teamAStats!; //gameInfo.teamBStats!;
         rightTeam = gameInfo.teamA;
-        rightStats = gameInfo.teamAStats!;
+        rightStats = widget.game.teamAStats!; //gameInfo.teamAStats!;
       }
     }
     
@@ -198,6 +258,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                   teamAbbrev: leftTeam.abbrev, 
                   direction: 'LTR', 
                   teamColor: leftTeam.color.toColor()!,
+                  callback: _updateAGoals,
                 ),
                 const GameStatTitle(
                   title: 'Goals'
@@ -206,6 +267,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                   teamAbbrev: rightTeam.abbrev, 
                   direction: 'LTR', 
                   teamColor: rightTeam.color.toColor()!,
+                  callback: _updateBGoals,
                 ),
               ],
             ),

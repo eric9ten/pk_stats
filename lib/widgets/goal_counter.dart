@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
+typedef GoalCallback = void Function(int val);
+
 class GoalCounter extends StatefulWidget {
   const GoalCounter ({ super.key, 
     required this.teamAbbrev,
     required this.teamColor,
     required this.direction,
+    required this.callback,
   });
 
   final String direction;
   final String teamAbbrev;
   final Color teamColor;
+  final GoalCallback callback;
 
   @override
   State<GoalCounter> createState() {
@@ -42,6 +46,7 @@ class _GoalCounter extends State<GoalCounter>{
     setState(() {
       _goalCount++;
       _goalCountController.text = _goalCount.toString();
+      widget.callback(_goalCount);
     });
   }
 
@@ -53,6 +58,7 @@ class _GoalCounter extends State<GoalCounter>{
         _goalCount = 0;
       }
       _goalCountController.text = _goalCount.toString();
+      widget.callback(_goalCount);
 
     });
   }

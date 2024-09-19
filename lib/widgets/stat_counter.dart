@@ -28,11 +28,11 @@ class _StatCounter extends State<StatCounter>{
   ); 
 
   void _incrementStatCount() {
-    // setState(() {
+    setState(() {
       _statCount++;
       _statCountController.text = _statCount.toString();
       widget.callback(_statCount);
-    // });
+    });
   }
 
   void _decrementStatCount() {

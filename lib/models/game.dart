@@ -13,17 +13,19 @@ class Game {
     required this.location,
     required this.teamA,
     required this.teamB,
+    required this.teamAStats,
+    required this.teamBStats,
     required this.isAHome,
   });
 
   final DateTime date;
   final TimeOfDay time;
   final String location;
-  final Team teamA;
-  final Team teamB;
+  Team teamA;
+  Team teamB;
   final bool isAHome;
-  GameStats? teamAStats;
-  GameStats? teamBStats;
+  GameStats teamAStats;
+  GameStats teamBStats;
   bool? aIsDefendingRight;
 
   String get formattedDate {
