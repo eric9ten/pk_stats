@@ -23,10 +23,10 @@ class Game {
   final String location;
   Team teamA;
   Team teamB;
-  final bool isAHome;
+  bool isAHome = true;
   GameStats teamAStats;
   GameStats teamBStats;
-  bool? aIsDefendingRight;
+  bool aIsDefendingRight = true;
 
   String get formattedDate {
     return formatter.format(date);

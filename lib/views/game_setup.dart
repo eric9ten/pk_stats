@@ -5,6 +5,7 @@ import 'package:pk_stats/models/team.dart';
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/goal_setup.dart';
 import 'package:pk_stats/widgets/new_team.dart';
+import 'package:pk_stats/models/game_stats.dart';
 
 final formatter = DateFormat.yMd();
 const timeFormatter = TimeOfDayFormat.HH_colon_mm;
@@ -26,6 +27,10 @@ class _GameSetupView extends State<GameSetupView> {
   Team? _teamB;
   bool _aIsHome = true;
   Game? _game;
+  final GameStats _teamAStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
+        tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
+  final GameStats _teamBStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
+        tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
 
   void _openAddTeamAOverlay() {
     showModalBottomSheet(
@@ -87,6 +92,8 @@ class _GameSetupView extends State<GameSetupView> {
     final time = _selectedTime;
     final location = _locationController.text;
     final teamA = _teamA;
+    final teamAStats = _teamAStats;
+    final teamBStats = _teamBStats;
     final teamB = _teamB;
     final isAHome = _aIsHome;
 
@@ -117,7 +124,9 @@ class _GameSetupView extends State<GameSetupView> {
       time: time,
       location: location,
       teamA: teamA,
+      teamAStats: teamAStats,
       teamB: teamB,
+      teamBStats: teamBStats,
       isAHome: isAHome,
     );
 

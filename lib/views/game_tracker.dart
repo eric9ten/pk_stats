@@ -34,7 +34,11 @@ class _GameTrackerView extends State<GameTrackerView> {
   Team rightTeam = Team(name: '', abbrev: '', color: '');
   Game gameInfo =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
     teamA: Team(name: '', abbrev: '', color: ''),
-    teamB: Team(name: '', abbrev: '', color: ''), 
+    teamB: Team(name: '', abbrev: '', color: ''),
+    teamAStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
+      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
+    teamBStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
+      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
     isAHome: true);
 
   int _stat = 0;
@@ -80,7 +84,7 @@ class _GameTrackerView extends State<GameTrackerView> {
     }
 
     print('Team A Goals...');
-    print(widget.game.teamAStats?.goals);
+    print(widget.game.teamAStats.goals);
     Navigator.push(
       context, MaterialPageRoute(builder: (ctx) => 
         GameReviewView(gameHalf: widget.gameHalf, game: widget.game)
@@ -214,29 +218,29 @@ class _GameTrackerView extends State<GameTrackerView> {
     Team leftTeam;
     Team rightTeam;
 
-    if (gameInfo.aIsDefendingRight!) {
+    if (gameInfo.aIsDefendingRight) {
       if (widget.gameHalf == 1) {
-        leftTeam = gameInfo.teamB;
-        leftStats = widget.game.teamBStats as GameStats; //gameInfo.teamBStats!;
-        rightTeam = gameInfo.teamA;
-        rightStats = widget.game.teamAStats as GameStats;
+        leftTeam = widget.game.teamB; // gameInfo.teamB;
+        leftStats = widget.game.teamBStats; //gameInfo.teamBStats!;
+        rightTeam = widget.game.teamA; //gameInfo.teamA;
+        rightStats = widget.game.teamAStats;
       } else {
-        leftTeam = gameInfo.teamA;
-        leftStats = gameInfo.teamAStats as GameStats;
-        rightTeam = gameInfo.teamB;
-        rightStats = widget.game.teamBStats as GameStats; //gameInfo.teamBStats!;
+        leftTeam = widget.game.teamA; //gameInfo.teamA;
+        leftStats = widget.game.teamAStats; //gameInfo.teamAStats;
+        rightTeam = widget.game.teamB; //gameInfo.teamB;
+        rightStats = widget.game.teamBStats; //gameInfo.teamBStats!;
       }
     } else {
       if (widget.gameHalf == 1) {
-        leftTeam = gameInfo.teamA;
-        leftStats = widget.game.teamAStats!;  //gameInfo.teamAStats!;
-        rightTeam = gameInfo.teamB;
-        rightStats = gameInfo.teamBStats!;
+        leftTeam = widget.game.teamA; //gameInfo.teamA;
+        leftStats = widget.game.teamAStats;  //gameInfo.teamAStats!;
+        rightTeam = widget.game.teamA; //gameInfo.teamB;
+        rightStats = widget.game.teamBStats; // gameInfo.teamBStats;
       } else {
-        leftTeam = gameInfo.teamB;
-        leftStats = widget.game.teamAStats!; //gameInfo.teamBStats!;
-        rightTeam = gameInfo.teamA;
-        rightStats = widget.game.teamAStats!; //gameInfo.teamAStats!;
+        leftTeam = widget.game.teamB; //gameInfo.teamB;
+        leftStats = widget.game.teamAStats; //gameInfo.teamBStats!;
+        rightTeam = widget.game.teamA; //gameInfo.teamA;
+        rightStats = widget.game.teamAStats; //gameInfo.teamAStats!;
       }
     }
     
