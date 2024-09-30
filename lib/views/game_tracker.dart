@@ -24,15 +24,15 @@ class GameTrackerView extends StatefulWidget {
 }
 
 class _GameTrackerView extends State<GameTrackerView> {
-  GameStats leftStats = GameStats(
+  GameStats _leftStats = GameStats(
     goals: 0, shots: 0, corners: 0, goalKicks: 0,
     tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-  GameStats rightStats = GameStats(
+  GameStats _rightStats = GameStats(
     goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
     tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-  Team leftTeam = Team(name: '', abbrev: '', color: '');
-  Team rightTeam = Team(name: '', abbrev: '', color: '');
-  Game gameInfo =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
+  Team _leftTeam = Team(name: '', abbrev: '', color: '');
+  Team _rightTeam = Team(name: '', abbrev: '', color: '');
+  Game _gameInfo =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
     teamA: Team(name: '', abbrev: '', color: ''),
     teamB: Team(name: '', abbrev: '', color: ''),
     teamAStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
@@ -41,41 +41,40 @@ class _GameTrackerView extends State<GameTrackerView> {
       tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
     isAHome: true);
 
-  int _stat = 0;
+  final int _stat = 0;
 
   void _toReview() {
-
     if (widget.game.aIsDefendingRight!) {
       if (widget.gameHalf == 1) {
-        widget.game.teamB = leftTeam;
-        widget.game.teamBStats = leftStats;
-        widget.game.teamA = rightTeam;
-        widget.game.teamAStats = rightStats;
+        widget.game.teamB = _leftTeam;
+        widget.game.teamBStats = _leftStats;
+        widget.game.teamA = _rightTeam;
+        widget.game.teamAStats = _rightStats;
         // leftTeam = gameInfo.teamB;
         // leftStats = gameInfo.teamBStats!;
         // rightTeam = gameInfo.teamA;
         // rightStats = gameInfo.teamAStats!;
       } else {
-        widget.game.teamA = leftTeam;
-        widget.game.teamAStats = leftStats;
-        widget.game.teamB = rightTeam;
-        widget.game.teamBStats = rightStats;
+        widget.game.teamA = _leftTeam;
+        widget.game.teamAStats = _leftStats;
+        widget.game.teamB = _rightTeam;
+        widget.game.teamBStats = _rightStats;
       }
     } else {
-      if (widget.gameHalf == 2) {
-        widget.game.teamA = leftTeam;
-        widget.game.teamAStats = leftStats;
-        widget.game.teamB = rightTeam;
-        widget.game.teamBStats = rightStats;
+      if (widget.gameHalf == 1) {
+        widget.game.teamB = _leftTeam;
+        widget.game.teamBStats = _leftStats;
+        widget.game.teamA = _rightTeam;
+        widget.game.teamAStats = _rightStats;
         // leftTeam = gameInfo.teamA;
         // leftStats = gameInfo.teamAStats!;
         // rightTeam = gameInfo.teamB;
         // rightStats = gameInfo.teamBStats!;
       } else {
-        widget.game.teamB = leftTeam;
-        widget.game.teamBStats = leftStats;
-        widget.game.teamA = rightTeam;
-        widget.game.teamAStats = rightStats;
+        widget.game.teamA = _leftTeam;
+        widget.game.teamAStats = _leftStats;
+        widget.game.teamB = _rightTeam;
+        widget.game.teamBStats = _rightStats;
         // leftTeam = gameInfo.teamB;
         // leftStats = gameInfo.teamBStats!;
         // rightTeam = gameInfo.teamA;
@@ -83,8 +82,6 @@ class _GameTrackerView extends State<GameTrackerView> {
       }
     }
 
-    print('Team A Goals...');
-    print(widget.game.teamAStats.goals);
     Navigator.push(
       context, MaterialPageRoute(builder: (ctx) => 
         GameReviewView(gameHalf: widget.gameHalf, game: widget.game)
@@ -94,153 +91,151 @@ class _GameTrackerView extends State<GameTrackerView> {
 
   void _updateAGoals(int count) {
     setState(() {
-      leftStats.goals = count;
+      _leftStats.goals = count;
     });
   }
 
   void _updateBGoals(int count) {
     setState(() {
-      rightStats.goals = count;
+      _rightStats.goals = count;
     });
   }
 
   void _updateAPasses(int count) {
     setState(() {
-      leftStats.passes = count;
+      _leftStats.passes = count;
     });
   }
 
   void _updateBPasses(int count) {
     setState(() {
-      rightStats.passes = count;
+      _rightStats.passes = count;
     });
   }
 
   void _updateAShots(int count) {
     setState(() {
-      leftStats.shots = count;
+      _leftStats.shots = count;
     });
   }
 
   void _updateBShots(int count) {
     setState(() {
-      rightStats.shots = count;
+      _rightStats.shots = count;
     });
   }
 
   void _updateACorners(int count) {
     setState(() {
-      leftStats.corners = count;
+      _leftStats.corners = count;
     });
   }
 
   void _updateBCorners(int count) {
     setState(() {
-      rightStats.corners = count;
+      _rightStats.corners = count;
     });
   }
 
   void _updateAGoalKicks(int count) {
     setState(() {
-      leftStats.goalKicks = count;
+      _leftStats.goalKicks = count;
     });
   }
 
   void _updateBGoalKicks(int count) {
     setState(() {
-      rightStats.goalKicks = count;
+      _rightStats.goalKicks = count;
     });
   }
 
   void _updateATackles(int count) {
     setState(() {
-      leftStats.tackles = count;
+      _leftStats.tackles = count;
     });
   }
 
   void _updateBTackles(int count) {
     setState(() {
-      rightStats.tackles = count;
+      _rightStats.tackles = count;
     });
   }
 
   void _updateAOffsides(int count) {
     setState(() {
-      leftStats.offsides = count;
+      _leftStats.offsides = count;
     });
   }
 
   void _updateBOffsides(int count) {
     setState(() {
-      rightStats.offsides = count;
+      _rightStats.offsides = count;
     });
   }
 
   void _updateAFouls(int count) {
     setState(() {
-      leftStats.fouls = count;
+      _leftStats.fouls = count;
     });
   }
 
   void _updateBFouls(int count) {
     setState(() {
-      rightStats.fouls = count;
+      _rightStats.fouls = count;
     });
   }
 
   void _updateAYellows(int count) {
     setState(() {
-      leftStats.yellows = count;
+      _leftStats.yellows = count;
     });
   }
 
   void _updateBYellows(int count) {
     setState(() {
-      rightStats.yellows = count;
+      _rightStats.yellows = count;
     });
   }
 
   void _updateAReds(int count) {
     setState(() {
-      leftStats.reds = count;
+      _leftStats.reds = count;
     });
   }
 
   void _updateBReds(int count) {
     setState(() {
-      rightStats.reds = count;
+      _rightStats.reds = count;
     });
   }
 
   @override 
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    Team leftTeam;
-    Team rightTeam;
 
-    if (gameInfo.aIsDefendingRight) {
+    if (_gameInfo.aIsDefendingRight) {
       if (widget.gameHalf == 1) {
-        leftTeam = widget.game.teamB; // gameInfo.teamB;
-        leftStats = widget.game.teamBStats; //gameInfo.teamBStats!;
-        rightTeam = widget.game.teamA; //gameInfo.teamA;
-        rightStats = widget.game.teamAStats;
+        _leftTeam = widget.game.teamB;
+        _leftStats = widget.game.teamBStats;
+        _rightTeam = widget.game.teamA; 
+        _rightStats = widget.game.teamAStats;
       } else {
-        leftTeam = widget.game.teamA; //gameInfo.teamA;
-        leftStats = widget.game.teamAStats; //gameInfo.teamAStats;
-        rightTeam = widget.game.teamB; //gameInfo.teamB;
-        rightStats = widget.game.teamBStats; //gameInfo.teamBStats!;
+        _leftTeam = widget.game.teamA; 
+        _leftStats = widget.game.teamAStats;
+        _rightTeam = widget.game.teamB; 
+        _rightStats = widget.game.teamBStats;
       }
     } else {
       if (widget.gameHalf == 1) {
-        leftTeam = widget.game.teamA; //gameInfo.teamA;
-        leftStats = widget.game.teamAStats;  //gameInfo.teamAStats!;
-        rightTeam = widget.game.teamA; //gameInfo.teamB;
-        rightStats = widget.game.teamBStats; // gameInfo.teamBStats;
+        _leftTeam = widget.game.teamA;
+        _leftStats = widget.game.teamAStats;
+        _rightTeam = widget.game.teamB;
+        _rightStats = widget.game.teamBStats;
       } else {
-        leftTeam = widget.game.teamB; //gameInfo.teamB;
-        leftStats = widget.game.teamAStats; //gameInfo.teamBStats!;
-        rightTeam = widget.game.teamA; //gameInfo.teamA;
-        rightStats = widget.game.teamAStats; //gameInfo.teamAStats!;
+        _leftTeam = widget.game.teamB;
+        _leftStats = widget.game.teamBStats;
+        _rightTeam = widget.game.teamA;
+        _rightStats = widget.game.teamAStats;
       }
     }
     
@@ -259,18 +254,18 @@ class _GameTrackerView extends State<GameTrackerView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GoalCounter(
-                  teamAbbrev: leftTeam.abbrev, 
+                  teamAbbrev: _leftTeam.abbrev, 
                   direction: 'LTR', 
-                  teamColor: leftTeam.color.toColor()!,
+                  teamColor: _leftTeam.color.toColor()!,
                   callback: _updateAGoals,
                 ),
                 const GameStatTitle(
                   title: 'Goals'
                 ),
                 GoalCounter(
-                  teamAbbrev: rightTeam.abbrev, 
+                  teamAbbrev: _rightTeam.abbrev, 
                   direction: 'LTR', 
-                  teamColor: rightTeam.color.toColor()!,
+                  teamColor: _rightTeam.color.toColor()!,
                   callback: _updateBGoals,
                 ),
               ],
