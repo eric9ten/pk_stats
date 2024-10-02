@@ -5,14 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 typedef StatCallback = void Function(int val);
 
 class StatCounter extends StatefulWidget {
-  const StatCounter ({ 
-    super.key,
-    required this.direction,
-    required this.callback, 
-    });
+  const StatCounter ({Key? key, required this.direction, required this.callback, required this.statCount, }) : super(key: key);
 
   final String direction;
   final StatCallback callback;
+  final int statCount;
 
   @override
   State<StatCounter> createState() {
@@ -22,30 +19,40 @@ class StatCounter extends StatefulWidget {
 }
 
 class _StatCounter extends State<StatCounter>{
-  int _statCount = 0;
-  final TextEditingController _statCountController = TextEditingController(
-    text: '0'
-  ); 
+  
+  late TextEditingController _statCountController;
 
   void _incrementStatCount() {
     setState(() {
-      _statCount++;
-      _statCountController.text = _statCount.toString();
-      widget.callback(_statCount);
+      int currentValue = int.parse(_statCountController.text);
+      currentValue++;
+      _statCountController.text = currentValue.toString();
+      widget.callback(currentValue);
     });
+  }
+
+  @override
+  void initState(){
+    _statCountController = TextEditingController(text: widget.statCount.toString());
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget (StatCounter previousState) {
+    super.didUpdateWidget(previousState);
+    _statCountController = TextEditingController(text: widget.statCount.toString());
   }
 
   void _decrementStatCount() {
     setState(() {
-      if (_statCount > 0 ) {
-        _statCount--; 
+      int currentValue = int.parse(_statCountController.text);
+      if (currentValue > 0 ) {
+        currentValue--; 
       } else {
-        _statCount = 0;
+        currentValue = 0;
       }
-      _statCountController.text = _statCount.toString();
-      widget.callback(_statCount);
-
-
+      _statCountController.text = currentValue.toString();
+      widget.callback(currentValue);
     });
   }
 

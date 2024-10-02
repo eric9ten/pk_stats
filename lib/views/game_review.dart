@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:pk_stats/models/game.dart';
-import 'package:pk_stats/views/game_tracker.dart';
 
 
 class GameReviewView extends StatelessWidget {
@@ -26,13 +25,7 @@ class GameReviewView extends StatelessWidget {
       final Game gameInfo = game;
 
       Navigator.pop(
-        context, MaterialPageRoute(builder: (ctx) => 
-          GameTrackerView(
-            game: gameInfo, 
-            gameHalf: 2,
-          )
-        )
-      );
+        context, 2);
     }
 
     return Scaffold(
@@ -219,7 +212,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats.goals.toString(),
+                                          game.teamAStats.goals.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -247,7 +240,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats.goals.toString(),
+                                          game.teamBStats.goals.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -267,7 +260,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats.passes.toString(),
+                                          game.teamAStats.passes.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -294,7 +287,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats.passes.toString(),
+                                          game.teamBStats.passes.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -311,7 +304,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats.shots.toString(),
+                                          game.teamAStats.shots.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -338,7 +331,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.shots.toString(),
+                                          game.teamBStats.shots.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -358,7 +351,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats!.corners.toString(),
+                                          game.teamAStats.corners.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -390,7 +383,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.corners.toString(),
+                                          game.teamBStats!.corners.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -407,7 +400,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats!.goalKicks.toString(),
+                                          game.teamAStats!.goalKicks.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -439,7 +432,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.goalKicks.toString(),
+                                          game.teamBStats.goalKicks.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -459,7 +452,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats!.tackles.toString(),
+                                          game.teamAStats.tackles.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -490,7 +483,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.tackles.toString(),
+                                          game.teamBStats.tackles.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -507,7 +500,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats!.offsides.toString(),
+                                          game.teamAStats.offsides.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -538,7 +531,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.offsides.toString(),
+                                          game.teamBStats.offsides.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -558,7 +551,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats!.fouls.toString(),
+                                          game.teamAStats.fouls.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -589,7 +582,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.fouls.toString(),
+                                          game.teamBStats.fouls.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -641,7 +634,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats!.yellows.toString(),
+                                          game.teamAStats.yellows.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -665,7 +658,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.yellows.toString(),
+                                          game.teamBStats.yellows.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -682,7 +675,7 @@ class GameReviewView extends StatelessWidget {
                                     children: <Widget>[
                                       TableCell(
                                         child: Text(
-                                          game.teamBStats!.reds.toString(),
+                                          game.teamAStats.reds.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -706,7 +699,7 @@ class GameReviewView extends StatelessWidget {
                                       ),
                                       TableCell(
                                         child: Text(
-                                          game.teamAStats!.reds.toString(),
+                                          game.teamBStats.reds.toString(),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme

@@ -17,8 +17,6 @@ class GameTracking extends StatelessWidget {
       body: const Column (
           mainAxisSize: MainAxisSize.min,
           children: [
-            // GameSetupView(),
-            // GoalSetupView()
           ],
         ),
     );

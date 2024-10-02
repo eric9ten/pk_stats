@@ -10,12 +10,14 @@ class GoalCounter extends StatefulWidget {
     required this.teamColor,
     required this.direction,
     required this.callback,
+    required this.goalCount,
   });
 
   final String direction;
   final String teamAbbrev;
   final Color teamColor;
   final GoalCallback callback;
+  final int goalCount;
 
   @override
   State<GoalCounter> createState() {
@@ -25,16 +27,20 @@ class GoalCounter extends StatefulWidget {
 }
 
 class _GoalCounter extends State<GoalCounter>{
-  int _goalCount = 0;
-  final TextEditingController _goalCountController = TextEditingController(
-    text: '0'
-  ); 
+
+  late TextEditingController _goalCountController;
   
   @override
   void initState() {
     super.initState();
-    _goalCountController.addListener(_updateGoalCount);
+    _goalCountController = TextEditingController( text: widget.goalCount.toString());
   }  
+
+  @override
+  void didUpdateWidget (GoalCounter previousState) {
+    super.didUpdateWidget(previousState);
+    _goalCountController = TextEditingController( text: widget.goalCount.toString());
+  }
   
   @override
   void dispose() {
@@ -44,29 +50,31 @@ class _GoalCounter extends State<GoalCounter>{
 
   void _incrementGoalCount() {
     setState(() {
-      _goalCount++;
-      _goalCountController.text = _goalCount.toString();
-      widget.callback(_goalCount);
+      int currentValue = int.parse(_goalCountController.text);
+      currentValue++;
+      _goalCountController.text = currentValue.toString();
+      widget.callback(currentValue);
     });
   }
 
   void _decrementGoalCount() {
     setState(() {
-      if (_goalCount > 0 ) {
-        _goalCount--; 
+      int currentValue = int.parse(_goalCountController.text);
+      if (currentValue > 0 ) {
+        currentValue--; 
       } else {
-        _goalCount = 0;
+        currentValue = 0;
       }
-      _goalCountController.text = _goalCount.toString();
-      widget.callback(_goalCount);
-
+      _goalCountController.text = currentValue.toString();
+      widget.callback(currentValue);
     });
   }
 
   void _updateGoalCount() {
     setState((){
+      int currentValue = int.parse(_goalCountController.text);
       final count = int.parse(_goalCountController.text);
-      _goalCount = count;
+      currentValue = count;
     });
   } 
 
