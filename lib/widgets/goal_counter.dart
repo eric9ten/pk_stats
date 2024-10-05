@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pk_stats/widgets/colored_title.dart';
 
 typedef GoalCallback = void Function(int val);
 
@@ -15,7 +16,7 @@ class GoalCounter extends StatefulWidget {
 
   final String direction;
   final String teamAbbrev;
-  final Color teamColor;
+  final String teamColor;
   final GoalCallback callback;
   final int goalCount;
 
@@ -87,13 +88,10 @@ class _GoalCounter extends State<GoalCounter>{
           mainAxisAlignment: MainAxisAlignment.center ,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (widget.direction == 'LTR')...[
-              Text( widget.teamAbbrev,                    
-                style: GoogleFonts.dosis(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                  color: widget.teamColor,
-                ),
+            if (widget.direction == 'LTR')...[ 
+              ColoredTitle(
+                title: widget.teamAbbrev,
+                color: widget.teamColor,
               ),
               const SizedBox(
                 width: 12,
@@ -127,13 +125,10 @@ class _GoalCounter extends State<GoalCounter>{
             if (widget.direction == 'RTL')...[
               const SizedBox(
                 width: 16,
-              ),
-              Text( widget.teamAbbrev,                    
-                style: GoogleFonts.dosis(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                  color: widget.teamColor,
-                ),
+              ), 
+              ColoredTitle(
+                title: widget.teamAbbrev,
+                color: widget.teamColor,
               ),
             ],
           ],

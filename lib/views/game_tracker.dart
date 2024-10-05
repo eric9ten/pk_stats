@@ -263,7 +263,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                 GoalCounter(
                   teamAbbrev: _leftTeam.abbrev, 
                   direction: 'LTR', 
-                  teamColor: _leftTeam.color.toColor()!,
+                  teamColor: _leftTeam.color,
                   callback: _updateLeftGoals,
                   goalCount: _leftStats.goals,
                 ),
@@ -273,7 +273,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                 GoalCounter(
                   teamAbbrev: _rightTeam.abbrev, 
                   direction: 'LTR', 
-                  teamColor: _rightTeam.color.toColor()!,
+                  teamColor: _rightTeam.color,
                   callback: _updateRightGoals,
                   goalCount: _rightStats.goals,
                 ),

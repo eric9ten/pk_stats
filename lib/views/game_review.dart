@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:pk_stats/models/game.dart';
+import 'package:pk_stats/widgets/colored_title.dart';
 
 
 class GameReviewView extends StatelessWidget {
@@ -109,36 +108,10 @@ class GameReviewView extends StatelessWidget {
                                 TableRow(
                                   children: <Widget>[
                                     TableCell(
-                                      child: Text(
-                                        game.teamA.abbrev,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.dosis(
-                                          color: game.teamA.color.toColor(),
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.w700,
-                                          shadows: game.teamA.color == 'FFFFFFFF' ? const [
-                                            Shadow(
-                                                // bottomLeft
-                                                offset: Offset(-1.5, -1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                            Shadow(
-                                                // bottomRight
-                                                offset: Offset(1.5, -1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                            Shadow(
-                                                // topRight
-                                                offset: Offset(1.5, 1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                            Shadow(
-                                                // topLeft
-                                                offset: Offset(-1.5, 1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                          ] : [],
-                                        ),
+                                      child: 
+                                      ColoredTitle(
+                                        title: game.teamA.abbrev,
+                                        color: game.teamA.color
                                       ),
                                     ),
                                     const TableCell(
@@ -146,36 +119,10 @@ class GameReviewView extends StatelessWidget {
                                     ),
                                     TableCell(
                                       verticalAlignment: TableCellVerticalAlignment.middle,
-                                      child: Text(
-                                        game.teamB.abbrev,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.dosis(
-                                          color: game.teamB.color.toColor(),
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.w700,
-                                          shadows: game.teamB.color == 'FFFFFFFF' ? const [
-                                            Shadow(
-                                                // bottomLeft
-                                                offset: Offset(-1.5, -1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                            Shadow(
-                                                // bottomRight
-                                                offset: Offset(1.5, -1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                            Shadow(
-                                                // topRight
-                                                offset: Offset(1.5, 1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                            Shadow(
-                                                // topLeft
-                                                offset: Offset(-1.5, 1.5),
-                                                color: Color.fromARGB(255, 175, 175, 175)
-                                            ),
-                                          ] : [],
-                                        ),
+                                      child: 
+                                      ColoredTitle(
+                                        title: game.teamB.abbrev,
+                                        color: game.teamB.color
                                       ),
                                     )
                                   ],
