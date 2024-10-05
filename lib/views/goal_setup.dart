@@ -17,7 +17,7 @@ class GoalSetupView extends StatefulWidget {
 }
 
 class _GoalSetupView extends State<GoalSetupView> {
-  bool _aIsDefendingRight = false;
+  bool _aIsDefendingRight = true;
 
   void _updateGoal() {
     final Game gameInfo = widget.game;
@@ -72,14 +72,16 @@ class _GoalSetupView extends State<GoalSetupView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text('Left',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                        )),
+                      style:  
+                        Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        )
+                      ),
                     const SizedBox(width: 10),
                     Switch(
                       value: _aIsDefendingRight,
-                      activeColor: const Color.fromARGB(255, 192, 115, 0),
-                      inactiveThumbColor: const Color.fromARGB(255, 255, 152, 0),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      inactiveThumbColor: Theme.of(context).colorScheme.onPrimary,
                       onChanged: (bool value) {
                         setState(() {
                           print('changed is `$value`');
@@ -89,9 +91,10 @@ class _GoalSetupView extends State<GoalSetupView> {
                     ),
                     const SizedBox(width: 10),
                     Text('Right',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                      )
+                      style:  
+                        Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        )
                     ),
                   ],
                 ),
