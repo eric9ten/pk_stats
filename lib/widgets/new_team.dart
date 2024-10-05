@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:pk_stats/models/team.dart';
 
 class NewTeam extends StatefulWidget {
-  const NewTeam({super.key, required this.onAddTeam});
+  NewTeam({super.key, required this.onAddTeam, required this.team});
   final void Function(Team team) onAddTeam;
+  final Team team;
 
   @override
   State<NewTeam> createState() {
@@ -15,10 +15,10 @@ class NewTeam extends StatefulWidget {
 }
 
 class _NewTeamState extends State<NewTeam> {
-  final _nameController = TextEditingController(text:'To Be Announced');
-  final _abbrevController = TextEditingController(text:'TBA');
   String _abbrev = '';
-  Color _teamColor = Colors.lightBlue;
+  late TextEditingController _nameController; // = TextEditingController(text:'To Be Announced');
+  late TextEditingController _abbrevController; // = TextEditingController(text:'TBA');
+  late Color? _teamColor;
 
   void _updateTeam() {
     final teamName = _nameController.text.trim();
@@ -50,7 +50,7 @@ class _NewTeamState extends State<NewTeam> {
       Team (
         abbrev: teamAbbrev,
         name: teamName,
-        color: teamColor.toHexString(),
+        color: teamColor!.toHexString(),
 
       )
     );
@@ -72,7 +72,6 @@ class _NewTeamState extends State<NewTeam> {
                   availableColors: availColors,
                   pickerColor: _teamColor, //default color
                   onColorChanged: (Color color) {
-                    //on the color picked
                     setState(() {
                       _teamColor = color;
                     });
@@ -119,6 +118,14 @@ class _NewTeamState extends State<NewTeam> {
       _abbrevController.text = _abbrev;
     }
     return;
+  }  
+  
+  @override
+  void initState(){
+    _teamColor = widget.team.color.toColor();
+    _nameController = TextEditingController(text: widget.team.name);
+    _abbrevController = TextEditingController(text: widget.team.abbrev);
+    super.initState();
   }    
 
   @override

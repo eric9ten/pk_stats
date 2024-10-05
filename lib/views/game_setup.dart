@@ -23,8 +23,8 @@ class _GameSetupView extends State<GameSetupView> {
   final _locationController = TextEditingController(text: 'TBD');
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-  Team? _teamA;
-  Team? _teamB;
+  late Team _teamA;
+  late Team _teamB;
   bool _aIsHome = true;
   Game? _game;
   final GameStats _teamAStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
@@ -37,7 +37,7 @@ class _GameSetupView extends State<GameSetupView> {
       useSafeArea: true,
       isScrollControlled: true,
       context: context,
-      builder: (ctx) => NewTeam(onAddTeam: _addTeamA),
+      builder: (ctx) => NewTeam(onAddTeam: _addTeamA, team: _teamA),
     );
   }
 
@@ -46,7 +46,7 @@ class _GameSetupView extends State<GameSetupView> {
       useSafeArea: true,
       isScrollControlled: true,
       context: context,
-      builder: (ctx) => NewTeam(onAddTeam: _addTeamB),
+      builder: (ctx) => NewTeam(onAddTeam: _addTeamB, team: _teamB),
     );
   }
 
