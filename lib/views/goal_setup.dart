@@ -5,9 +5,10 @@ import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/game_tracker.dart';
 
 class GoalSetupView extends StatefulWidget {
-  const GoalSetupView ({super.key, required this.game});
+  const GoalSetupView ({super.key, required this.game, required this.gameHalf});
 
   final Game game;
+  final int gameHalf;
 
   @override 
   State<GoalSetupView> createState() {
@@ -27,7 +28,7 @@ class _GoalSetupView extends State<GoalSetupView> {
       context, MaterialPageRoute(builder: (ctx) => 
         GameTrackerView(
           game: gameInfo, 
-          gameHalf: 1,
+          gameHalf: widget.gameHalf,
         )
       )
     );

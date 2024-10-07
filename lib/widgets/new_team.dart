@@ -4,7 +4,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:pk_stats/models/team.dart';
 
 class NewTeam extends StatefulWidget {
-  NewTeam({super.key, required this.onAddTeam, required this.team});
+  const NewTeam({super.key, required this.onAddTeam, required this.team});
   final void Function(Team team) onAddTeam;
   final Team team;
 

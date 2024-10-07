@@ -27,6 +27,7 @@ class _GameSetupView extends State<GameSetupView> {
   late Team _teamB;
   bool _aIsHome = true;
   Game? _game;
+  final int _gameHalf = 1;
   final GameStats _teamAStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
         tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
   final GameStats _teamBStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
@@ -132,7 +133,7 @@ class _GameSetupView extends State<GameSetupView> {
 
     Navigator.push(
       context, MaterialPageRoute(builder: (ctx) => 
-        GoalSetupView(game: _game!,
+        GoalSetupView(game: _game!, gameHalf: _gameHalf,
       ))
     );
   }
