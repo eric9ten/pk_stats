@@ -59,7 +59,7 @@ class _NewTeamState extends State<NewTeam> {
 
   void _presentColorPicker() {    
     final availColors = [ Colors.black, Colors.grey, Colors.white, Colors.red, Colors.orange, Colors.yellow,
-      Colors.green, Colors.blue, Colors.indigo, Colors.purple, Colors.brown ];
+      Colors.green, Colors.blue, Colors.blueGrey, Colors.indigo, Colors.purple, Colors.brown ];
     
     showDialog(
         context: context,
@@ -122,7 +122,9 @@ class _NewTeamState extends State<NewTeam> {
   
   @override
   void initState(){
-    _teamColor = widget.team.color.toColor();
+    _teamColor = widget.team.color != '' 
+      ? widget.team.color.toColor()
+       : Colors.black;
     _nameController = TextEditingController(text: widget.team.name);
     _abbrevController = TextEditingController(text: widget.team.abbrev);
     super.initState();

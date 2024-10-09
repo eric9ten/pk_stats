@@ -12,7 +12,6 @@ const timeFormatter = TimeOfDayFormat.HH_colon_mm;
 
 class GameSetupView extends StatefulWidget {
   const GameSetupView({super.key, required this.game});
-
   final Game game;
 
   @override
@@ -28,19 +27,20 @@ class _GameSetupView extends State<GameSetupView> {
   late Team _teamA;
   late Team _teamB;
   bool _aIsHome = true;
-  // Game _game =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
-  //   teamA: Team(name: '', abbrev: '', color: ''),
-  //   teamB: Team(name: '', abbrev: '', color: ''),
-  //   teamAStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-  //     tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
-  //   teamBStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-  //     tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
-  //   isAHome: true);
+  late Game _game;
   final int _gameHalf = 1;
   final GameStats _teamAStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
         tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
   final GameStats _teamBStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
         tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
+
+  @override
+  void initState() {
+    super.initState();
+     _game = widget.game;
+     _teamA = _game.teamA;
+     _teamB = _game.teamB;
+  }
 
   void _openAddTeamAOverlay() {
     showModalBottomSheet(
@@ -108,7 +108,7 @@ class _GameSetupView extends State<GameSetupView> {
     final isAHome = _aIsHome;
     
 
-    if (date == null || time == null || teamA == null || teamB == null) {
+    if (date == null || time == null || teamA.name == '' || teamB.name == '') {
       showDialog(
         context: context, 
         builder: (ctx) => AlertDialog (
@@ -130,7 +130,7 @@ class _GameSetupView extends State<GameSetupView> {
       return;
     }
 
-    final _game = Game (
+    final game = Game (
       date: date,
       time: time,
       location: location,
@@ -143,7 +143,7 @@ class _GameSetupView extends State<GameSetupView> {
 
     Navigator.push(
       context, MaterialPageRoute(builder: (ctx) => 
-        GoalSetupView(game: _game!, gameHalf: _gameHalf,
+        GoalSetupView(game: game, gameHalf: _gameHalf,
       ))
     );
   }
@@ -256,7 +256,7 @@ class _GameSetupView extends State<GameSetupView> {
                       ),
                     ),
                     Text(
-                        _teamA?.name ?? 'Add team A',
+                        _teamA.name == '' ? 'Add team A' : _teamA.name,
                         style: 
                           Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
@@ -264,7 +264,7 @@ class _GameSetupView extends State<GameSetupView> {
                     ),
                     IconButton(
                       onPressed: _openAddTeamAOverlay, 
-                      icon: Icon (_teamA?.name != "" ? Icons.edit : Icons.add_circle_outline),
+                      icon: Icon (_teamA.name != "" ? Icons.edit : Icons.add_circle_outline),
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ],
@@ -285,7 +285,7 @@ class _GameSetupView extends State<GameSetupView> {
                       ),
                     ),
                     Text(
-                      _teamB?.name ?? 'Add team B',
+                      _teamB.name == '' ? 'Add team B': _teamB.name,
                       style: 
                         Theme.of(context).textTheme.bodySmall!.copyWith(
                           color: Theme.of(context).colorScheme.secondary,
@@ -293,7 +293,7 @@ class _GameSetupView extends State<GameSetupView> {
                     ),
                     IconButton(
                       onPressed: _openAddTeamBOverlay, 
-                      icon: Icon (_teamB?.name != "" ? Icons.edit : Icons.add_circle_outline),
+                      icon: Icon (_teamB.name != "" ? Icons.edit : Icons.add_circle_outline),
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ],
