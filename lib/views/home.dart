@@ -22,10 +22,9 @@ class HomeScreen extends StatelessWidget {
     Game gameInfo = game;
 
     void startGame() {
-      Navigator.push(
-        context, MaterialPageRoute(builder: (ctx) => 
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => 
           GameSetupView(game: gameInfo))
-        );
+      );
     }
 
     return Scaffold(
