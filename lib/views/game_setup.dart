@@ -11,7 +11,9 @@ final formatter = DateFormat.yMd();
 const timeFormatter = TimeOfDayFormat.HH_colon_mm;
 
 class GameSetupView extends StatefulWidget {
-  const GameSetupView({super.key});
+  const GameSetupView({super.key, required this.game});
+
+  final Game game;
 
   @override
   State<GameSetupView> createState() {
@@ -26,7 +28,14 @@ class _GameSetupView extends State<GameSetupView> {
   late Team _teamA;
   late Team _teamB;
   bool _aIsHome = true;
-  Game? _game;
+  // Game _game =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
+  //   teamA: Team(name: '', abbrev: '', color: ''),
+  //   teamB: Team(name: '', abbrev: '', color: ''),
+  //   teamAStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
+  //     tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
+  //   teamBStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
+  //     tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
+  //   isAHome: true);
   final int _gameHalf = 1;
   final GameStats _teamAStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
         tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
@@ -97,6 +106,7 @@ class _GameSetupView extends State<GameSetupView> {
     final teamBStats = _teamBStats;
     final teamB = _teamB;
     final isAHome = _aIsHome;
+    
 
     if (date == null || time == null || teamA == null || teamB == null) {
       showDialog(
@@ -120,7 +130,7 @@ class _GameSetupView extends State<GameSetupView> {
       return;
     }
 
-    _game = Game (
+    final _game = Game (
       date: date,
       time: time,
       location: location,
