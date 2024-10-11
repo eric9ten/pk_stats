@@ -85,6 +85,59 @@ class _GameTrackerView extends State<GameTrackerView> {
     }
   }
 
+  void _resetTracker() {    
+    showDialog(
+        context: context, 
+        builder: (ctx) => AlertDialog (
+          title: const Text('Confirm Reset'),
+          content: const Text(
+              'Are you sure you want to reset the game stats?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _resetStats();
+                Navigator.pop(ctx);
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        ),
+      );
+  }
+
+  void _resetStats() {
+    widget.game.teamAStats =  GameStats(goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
+      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
+    widget.game.teamBStats = GameStats(goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
+      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
+    _updateLeftGoals(0);
+    _updateLeftPasses(0);
+    _updateLeftShots(0);
+    _updateLeftCorners(0);
+    _updateLeftGoalKicks(0);
+    _updateLeftTackles(0);
+    _updateLeftOffsides(0);
+    _updateLeftFouls(0);
+    _updateLeftYellows(0);
+    _updateLeftReds(0);
+    _updateRightGoals(0);
+    _updateRightPasses(0);
+    _updateRightShots(0);
+    _updateRightCorners(0);
+    _updateRightGoalKicks(0);
+    _updateRightTackles(0);
+    _updateRightOffsides(0);
+    _updateRightFouls(0);
+    _updateRightYellows(0);
+    _updateRightReds(0);
+  }
+
   void _updateTeams() {
     
     if (_gameInfo.aIsDefendingRight) {
@@ -470,7 +523,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                      onPressed: () {}, 
+                      onPressed: _resetTracker, 
                       icon: const Icon(Icons.restart_alt),
                     ),
                     TextButton(
@@ -482,9 +535,8 @@ class _GameTrackerView extends State<GameTrackerView> {
                       ),
                       child: Text(
                         buttonLabel,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
-          
                           ),
                       ),
                     ),
