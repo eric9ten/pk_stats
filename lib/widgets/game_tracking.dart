@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:pk_stats/views/game_setup.dart';
-import 'package:pk_stats/views/goal_setup.dart';
 
 class GameTracking extends StatelessWidget {
   const GameTracking({super.key, required this.title});

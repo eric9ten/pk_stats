@@ -19,7 +19,7 @@ class GameViewPdf extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('PDF Demo'),
+          title: const Text('PDF Demo'),
         ),
         body: PdfPreview(
           build: (context) => buildPdf(),
@@ -90,7 +90,7 @@ class GameViewPdf extends StatelessWidget {
                     ),
                     pw.Row(
                       children: [
-                        pw.Text('Hello World'),
+                        pw.Text(game.date.toString(),),
                       ]
                     ),
                     pw.Row(

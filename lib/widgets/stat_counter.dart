@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 typedef StatCallback = void Function(int val);
 
 class StatCounter extends StatefulWidget {
-  const StatCounter ({Key? key, required this.direction, required this.callback, 
-    required this.statCount, }) : super(key: key);
+  const StatCounter ({super.key, required this.direction, required this.callback, 
+    required this.statCount, });
 
   final String direction;
   final StatCallback callback;
