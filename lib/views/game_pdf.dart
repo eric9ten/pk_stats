@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -19,7 +20,7 @@ class GameViewPdf extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('PDF Demo'),
+          title: const Text('Game Results'),
         ),
         body: PdfPreview(
           build: (context) => buildPdf(),
@@ -51,7 +52,7 @@ class GameViewPdf extends StatelessWidget {
                       children: [
                         pw.Text(game.teamA.name,
                           style: const pw.TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                           ),
                         ),
                         pw.Padding(
@@ -59,14 +60,14 @@ class GameViewPdf extends StatelessWidget {
                           child: pw.Text(game.teamAStats.goals.toString(),
                             style: pw.TextStyle(
                               fontWeight: pw.FontWeight.bold,
-                              fontSize: 32,
+                              fontSize: 28,
                             ),
                           ),
                         ),
                         pw.Text('-',
                           style: pw.TextStyle(
                             fontWeight: pw.FontWeight.bold,
-                            fontSize: 32,
+                            fontSize: 28,
                           ),
                         ),
                         pw.Padding(
@@ -75,13 +76,13 @@ class GameViewPdf extends StatelessWidget {
                           pw.Text(game.teamBStats.goals.toString(),
                             style: pw.TextStyle(
                               fontWeight: pw.FontWeight.bold,
-                              fontSize: 32,
+                              fontSize: 28,
                             ),
                           ),
                         ),
                         pw.Text(game.teamB.name,
                           style: const pw.TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                           ),
                         ),
                       ]
@@ -89,8 +90,46 @@ class GameViewPdf extends StatelessWidget {
                       ]
                     ),
                     pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        pw.Text(game.date.toString(),),
+                        pw.Text(game.isAHome ? 'Home' : 'Away',
+                          style: const pw.TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        pw.SizedBox(
+                          width: 32,
+                        ),
+                        pw.Icon(
+                          const pw.IconData(0xe530), 
+                          size: 14,
+                        ),
+                        pw.Text(DateFormat.yMMMd().format(game.date),
+                          style: const pw.TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        pw.SizedBox(
+                          width: 32,
+                        ),
+                        pw.Icon(
+                          const pw.IconData(0xe530), 
+                          size: 14,
+                        ),
+                        pw.Text(game.time.toString(),
+                          style: const pw.TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        pw.SizedBox(
+                          width: 32,
+                        ),
+                        pw.Text(game.isAHome ? 'Away' : 'Home',
+                          style: const pw.TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
                       ]
                     ),
                     pw.Row(
