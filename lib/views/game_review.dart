@@ -1,11 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
-
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/game_pdf.dart';
@@ -34,7 +28,6 @@ class GameReviewView extends StatelessWidget {
       if (gameHalf == 1) {
         Navigator.pop(context, 2);
       } else {
-        print('Generating PDF...');
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => GameViewPdf(game: game)
