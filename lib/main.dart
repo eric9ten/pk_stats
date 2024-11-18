@@ -6,7 +6,7 @@ import 'package:pk_stats/views/home.dart';
 final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
-    background:  const Color.fromARGB(255, 240, 240, 240),
+    surface: const Color.fromARGB(255, 240, 240, 240),
     brightness: Brightness.light,
     seedColor: const Color.fromARGB(255, 255, 152, 0),
     primary: const Color.fromARGB(255, 255, 152, 0),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
 
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/game_pdf.dart';

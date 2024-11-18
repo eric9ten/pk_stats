@@ -70,7 +70,7 @@ class _NewTeamState extends State<NewTeam> {
               padding: const EdgeInsets.all(8.0),
                 child: BlockPicker(
                   availableColors: availColors,
-                  pickerColor: _teamColor, //default color
+                  pickerColor: _teamColor,
                   onColorChanged: (Color color) {
                     setState(() {
                       _teamColor = color;
@@ -83,7 +83,7 @@ class _NewTeamState extends State<NewTeam> {
                 child: const Text('Okay'),
                 onPressed: () {
                   Navigator.of(context)
-                      .pop(); //dismiss the color picker
+                      .pop();
                 },
               ),
             ],
@@ -134,7 +134,6 @@ class _NewTeamState extends State<NewTeam> {
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
     return LayoutBuilder(builder: (ctx, constraints) {
-      final width = constraints.maxWidth;
 
       return  SizedBox(
           height: double.infinity,
@@ -191,7 +190,7 @@ class _NewTeamState extends State<NewTeam> {
                             maxLength: 4,
                             textCapitalization: TextCapitalization.characters,
                             decoration: const InputDecoration(
-                              label: Text('Team Abbrev'),
+                              label: Text('Abbrev'),
                             ),
                             style: 
                               Theme.of(context).textTheme.bodyLarge!.copyWith(

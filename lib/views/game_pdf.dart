@@ -1,12 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pk_stats/utils/colors.dart';
+import 'package:pk_stats/utils/strings.dart';
+import 'package:flutter/services.dart';
 import 'package:printing/printing.dart';
 
 import 'package:pk_stats/models/game.dart';
@@ -44,6 +42,8 @@ class GameViewPdf extends StatelessWidget {
     // Create the Pdf document
     final pw.Document doc = pw.Document();
     final pageTheme = await _gamePageTheme(format);
+    // final fontData = await GoogleFonts.materialIcons().load();
+    // final materialIconsFont = pw.Font.ttf(fontData.buffer.asByteData());
 
     doc.addPage(
       pw.Page(
@@ -57,7 +57,7 @@ class GameViewPdf extends StatelessWidget {
                       mainAxisAlignment: pw.MainAxisAlignment.center,
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        _buildHeader(),
+                        _buildHeader(context),
                       ]
                     ),
                     pw.Row(
@@ -82,9 +82,7 @@ class GameViewPdf extends StatelessWidget {
                     ),
                     pw.Row(
                       children: [
-                        pw.SizedBox(
-                          height: 48,
-                        )
+                        _buildLegend(),
                       ]
                     ),
                     pw.Row(
@@ -128,7 +126,7 @@ class GameViewPdf extends StatelessWidget {
       );
   }
 
-  pw.Widget _buildHeader() {
+  pw.Widget _buildHeader(pw.Context context) {
     return                         
       pw.Column(
         children: [
@@ -183,10 +181,10 @@ class GameViewPdf extends StatelessWidget {
               pw.SizedBox(
                 width: 32,
               ),
-              pw.Icon(
-                const pw.IconData(0xe530), 
-                size: 14,
-              ),
+              // pw.Icon(
+              //   const pw.IconData(0xe122), 
+              //   size: 14,
+              // ),
               pw.Text(DateFormat.yMMMd().format(game.date),
                 style: const pw.TextStyle(
                   fontSize: 14,
@@ -195,11 +193,11 @@ class GameViewPdf extends StatelessWidget {
               pw.SizedBox(
                 width: 32,
               ),
-              pw.Icon(
-                const pw.IconData(0xe530), 
-                size: 14,
-              ),
-              pw.Text(game.time.toString(),
+              // pw.Icon(
+              //   const pw.IconData(0xe03a), 
+              //   size: 14,
+              // ),
+              pw.Text('${game.time.hourOfPeriod}:${game.time.minute}',
                 style: const pw.TextStyle(
                   fontSize: 14,
                 ),
@@ -219,27 +217,42 @@ class GameViewPdf extends StatelessWidget {
   }
 
   pw.Widget _buildScoreBar() {
+
+  // String? key = '0xFFFF9800'; // Example key
+  // print('Map keys: ${colorName.keys}');
+  // print('Looking for key: $key');
+  // String? value = colorName[key];
+  // print(value != null 
+  //     ? 'The color for key $key is $value.' 
+  //     : 'The key $key does not exist in the map.');
+
     return
       pw.Expanded(
         child: pw.Container(
           decoration: pw.BoxDecoration(
             color: PdfColor.fromHex('#efefef'),
             border: pw.Border.all (
-              width: 2, 
+              width: 1, 
               color: PdfColor.fromHex('#424242'),
               style: pw.BorderStyle.solid,
             )
           ),
           padding: const pw.EdgeInsets.all(8.0),
-          margin: const pw.EdgeInsets.all(32),
+          margin: const pw.EdgeInsets.fromLTRB(32, 16, 32, 16),
           child: pw.Center(
             child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.center,
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 pw.Text(
-                  colorName[game.teamA.color.toString()] ??
-                  game.teamA.abbrev ),
+                  colorName['0x${game.teamA.color.trim().toUpperCase()}'] ?? 
+                  game.teamA.abbrev,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#434343'),
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                  )
+                ),
                 pw.SizedBox(
                   width: 8,
                 ),
@@ -248,7 +261,7 @@ class GameViewPdf extends StatelessWidget {
                   decoration: pw.BoxDecoration(
                     color: PdfColor.fromHex('#efefef'),
                     border: pw.Border.all (
-                      width: 2, 
+                      width: 1, 
                       color: PdfColor.fromHex('#424242'),
                       style: pw.BorderStyle.solid,
                     )
@@ -273,7 +286,7 @@ class GameViewPdf extends StatelessWidget {
                   decoration: pw.BoxDecoration(
                     color: PdfColor.fromHex('#efefef'),
                     border: pw.Border.all (
-                      width: 2, 
+                      width: 1, 
                       color: PdfColor.fromHex('#424242'),
                       style: pw.BorderStyle.solid,
                     )
@@ -284,8 +297,13 @@ class GameViewPdf extends StatelessWidget {
                   width: 8,
                 ),
                 pw.Text(
-                  colorName[game.teamB.color.toString()] ??
-                  game.teamB.abbrev
+                  colorName['0x${game.teamB.color.trim().toUpperCase()}'] ??
+                  game.teamB.abbrev,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#434343'),
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                  ) 
                 ), 
               ]
             )
@@ -595,6 +613,11 @@ class GameViewPdf extends StatelessWidget {
                 10,
                 (col) => ['', 'SH', 'Pass', 'CK', 'GK', 'Tack', 'OS', 'FL', 'YC', 'RC'][col]
               ),
+              cellAlignment: pw.Alignment.center,
+              border: pw.TableBorder.all(width: 0, style: pw.BorderStyle.none),
+              oddRowDecoration: pw.BoxDecoration(
+                color: PdfColor.fromHex('#EFEFEF'),
+              ),
               data: <List<String>>[
                 <String>[ game.teamA.abbrev, game.teamAStats.shots.toString(),
                 game.teamAStats.passes.toString(),
@@ -620,6 +643,71 @@ class GameViewPdf extends StatelessWidget {
         )
     );
 
+  }
+
+  pw.Widget _buildLegend(){
+    return pw.Expanded(
+      child: pw.Container(
+        padding: const pw.EdgeInsets.all(16),
+        margin: const pw.EdgeInsets.only(top: 16),
+        decoration: pw.BoxDecoration(
+          border: pw.Border.all(
+            color: PdfColor.fromHex('#E1E1E1'),
+            width: 1,
+            style: pw.BorderStyle.solid,
+          ) 
+        ),
+        child: pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                _legendItem('SH', 'Shots'),
+                pw.SizedBox(height: 8),
+                _legendItem('Pass', 'Completed passes'),
+              ]
+            ),
+            pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                _legendItem('CK', 'Corner Kicks'),
+                pw.SizedBox(height: 8),
+                _legendItem('GK', 'Goal Kicks'),
+              ]
+            ),
+            pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                _legendItem('Tack', 'Tackles resulting in a turnover'),
+              ]
+            ),
+            pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                _legendItem('OS', 'Offsides'),
+                pw.SizedBox(height: 8),
+                _legendItem('FL', 'Fouls committed'),
+              ]
+            ),
+            pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                _legendItem('YC', 'Yellow Cards given'),
+                pw.SizedBox(height: 8),
+                _legendItem('RC', 'Red Cards given'),
+              ]
+            ),
+          ]
+        )
+      )
+    );
   }
 }
 
@@ -704,4 +792,27 @@ pw.Widget _divergingBarGraph(pw.Context context, statName, teamAStat, teamBStat)
       ]
     )
   );
+}
+
+pw.Widget _legendItem(String statAbbrev, String statDesc){
+  return 
+    pw.Row(
+      children: [
+        pw.Text('$statAbbrev: ',
+          style: pw.TextStyle(
+            color: PdfColor.fromHex('#222222'),
+            fontWeight: pw.FontWeight.bold,
+            fontSize: 8,
+          )
+        ),
+        pw.Text(statDesc,
+          style: pw.TextStyle(
+            color: PdfColor.fromHex('#222222'),
+            fontSize: 8,
+          ),
+          softWrap: true,
+          overflow: pw.TextOverflow.visible,
+        )
+      ]
+    );
 }

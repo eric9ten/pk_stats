@@ -44,6 +44,7 @@ class _GameSetupView extends State<GameSetupView> {
 
   void _openAddTeamAOverlay() {
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       useSafeArea: true,
       isScrollControlled: true,
       context: context,
@@ -53,6 +54,7 @@ class _GameSetupView extends State<GameSetupView> {
 
   void _openAddTeamBOverlay() {
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       useSafeArea: true,
       isScrollControlled: true,
       context: context,
