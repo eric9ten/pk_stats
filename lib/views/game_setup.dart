@@ -6,6 +6,8 @@ import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/goal_setup.dart';
 import 'package:pk_stats/widgets/new_team.dart';
 import 'package:pk_stats/models/game_stats.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:pk_stats/widgets/ad-banner.dart';
 
 final formatter = DateFormat.yMd();
 const timeFormatter = TimeOfDayFormat.HH_colon_mm;
@@ -367,6 +369,7 @@ class _GameSetupView extends State<GameSetupView> {
                     ),
                   ]
                 ),
+                AdWidget(ad: _bannerAd),
               ],
             ),
           ),

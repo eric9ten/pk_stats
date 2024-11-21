@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pk_stats/views/home.dart';
 
 final theme = ThemeData(
@@ -48,7 +51,10 @@ final theme = ThemeData(
 );
 
 
-void main() {
+void main() async {
+  
+  WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
   runApp(const App());
 }
 
