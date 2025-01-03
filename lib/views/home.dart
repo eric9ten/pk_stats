@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pk_stats/views/game_setup.dart';
 
+import 'package:pk_stats/views/game_setup.dart';
 import 'package:pk_stats/models/team.dart';
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/models/game_stats.dart';

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/game_pdf.dart';
 import 'package:pk_stats/widgets/colored_title.dart';
+import 'package:pk_stats/widgets/ad_banner.dart';
 
 
 class GameReviewView extends StatelessWidget {
@@ -15,6 +16,7 @@ class GameReviewView extends StatelessWidget {
   Widget build(BuildContext context) {
     String halfLabel = 'Halftime';
     String buttonLabel = 'Start 2nd Half';
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
 
     if (gameHalf == 2) {
       halfLabel = 'Final';
@@ -39,23 +41,12 @@ class GameReviewView extends StatelessWidget {
       appBar: AppBar(
         title: Text(halfLabel),
       ),
-      body: SingleChildScrollView(
-        child: ConstrainedBox(
-            constraints: const BoxConstraints(
-                minHeight: 0,
-                maxHeight: double.infinity,
-                minWidth: double.infinity,
-                maxWidth: double.infinity),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+          padding: EdgeInsets.fromLTRB(8, 4 , 8, keyboardSpace + 16),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
-                  children: [
-                    SizedBox(
-                      height: 8,
-                    ),
-                  ],
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -67,7 +58,8 @@ class GameReviewView extends StatelessWidget {
                               color: Theme.of(context).colorScheme.secondary,
                             )),
                   ],
-                ),const Row(
+                ),
+                const Row(
                   children: [
                     SizedBox(
                       height: 2,
@@ -696,13 +688,19 @@ class GameReviewView extends StatelessWidget {
                             ),
                           ),
                         ],
-                      )
+                      ),
+                      // const Spacer(
+                      //   flex: 1,
+                      // ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      MyBannerAdWidget(),
                     ],
                   ),
                 ),
               ],
             )),
-      ),
     );
   }
 }

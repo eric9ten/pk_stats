@@ -8,6 +8,7 @@ import 'package:pk_stats/widgets/goal_counter.dart';
 import 'package:pk_stats/widgets/stat_counter.dart';
 import 'package:pk_stats/widgets/game_stat_title.dart';
 import 'package:pk_stats/views/game_review.dart';
+import 'package:pk_stats/widgets/ad_banner.dart';
 
 class GameTrackerView extends StatefulWidget {
   GameTrackerView ({ super.key, required this.game, required this.gameHalf});
@@ -302,11 +303,9 @@ class _GameTrackerView extends State<GameTrackerView> {
       appBar: AppBar(
         title: const Text('Game Tracker'),
       ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Padding(
+      body: 
+        Padding(
           padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
-          child: SingleChildScrollView(
             child: Column(
               children: [
                 const SizedBox(
@@ -542,11 +541,13 @@ class _GameTrackerView extends State<GameTrackerView> {
                     
                   ]
                 ),
+                const Spacer(
+                  flex: 1,
+                ),
+                MyBannerAdWidget(),
               ],
             ),
           ),
-        ),
-      ),
     );
   }
 }

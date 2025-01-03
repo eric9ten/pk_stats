@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/game_tracker.dart';
+import 'package:pk_stats/widgets/ad_banner.dart';
 
 class GoalSetupView extends StatefulWidget {
   const GoalSetupView ({super.key, required this.game, required this.gameHalf});
@@ -43,10 +44,8 @@ class _GoalSetupView extends State<GoalSetupView> {
       appBar: AppBar (
         title: const Text ('Goal Setup'),
       ),
-      body: SizedBox(
-        width: double.infinity,
-        child: SingleChildScrollView(
-          child: Padding(
+      body: 
+          Padding(
             padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
             child: Column(
               children: [
@@ -126,11 +125,13 @@ class _GoalSetupView extends State<GoalSetupView> {
                     ),
                   ]
                 ),
+                const Spacer(
+                  flex: 1,
+                ),
+                MyBannerAdWidget(),
               ],
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

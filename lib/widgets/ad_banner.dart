@@ -1,19 +1,14 @@
 import 'dart:io';
-
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class MyBannerAdWidget extends StatefulWidget {
   /// The requested size of the banner. Defaults to [AdSize.banner].
   final AdSize adSize;
-
-  /// The AdMob ad unit to show.
-  ///
-  /// TODO: replace this test ad unit with your own ad unit
   final String adUnitId = Platform.isAndroid
-      // Use this ad unit on Android...
+      // Android
       ? 'ca-app-pub-3940256099942544/6300978111'
-      // ... or this one on iOS.
+      // iOS
       : 'ca-app-pub-3940256099942544/2934735716';
 
   MyBannerAdWidget({
@@ -37,7 +32,7 @@ class _MyBannerAdWidgetState extends State<MyBannerAdWidget> {
         height: widget.adSize.height.toDouble(),
         child: _bannerAd == null
             // Nothing to render yet.
-            ? SizedBox()
+            ? const SizedBox()
             // The actual ad.
             : AdWidget(ad: _bannerAd!),
       ),

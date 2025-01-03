@@ -4,10 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:pk_stats/models/team.dart';
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/goal_setup.dart';
+import 'package:pk_stats/widgets/ad_banner.dart';
 import 'package:pk_stats/widgets/new_team.dart';
 import 'package:pk_stats/models/game_stats.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:pk_stats/widgets/ad-banner.dart';
 
 final formatter = DateFormat.yMd();
 const timeFormatter = TimeOfDayFormat.HH_colon_mm;
@@ -167,10 +166,7 @@ class _GameSetupView extends State<GameSetupView> {
         title: const Text('Game Details'),
         ),
       body: 
-      SizedBox(
-        width: double.infinity,
-        child: SingleChildScrollView (
-          child: Padding(
+          Padding(
             padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
             child: Column(
               children: [
@@ -369,12 +365,13 @@ class _GameSetupView extends State<GameSetupView> {
                     ),
                   ]
                 ),
-                AdWidget(ad: _bannerAd),
+                const Spacer(
+                  flex: 1,
+                ),
+                MyBannerAdWidget(),
               ],
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        );
   }
 }
