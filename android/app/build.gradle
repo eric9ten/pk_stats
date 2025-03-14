@@ -25,10 +25,11 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("key.properties")
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -63,7 +64,8 @@ android {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String
             keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storeFile = file(keystoreProperties["storeFile"])
+            // storeFile = keystoreProperties["storeFile"] ? file(keystoreProperties["storeFile"]) : null
             storePassword = keystoreProperties["storePassword"] as String
         }
     }
