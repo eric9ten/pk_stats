@@ -12,7 +12,7 @@ class GameStatTitle extends StatelessWidget {
         child: Text(title,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w400,
             color: Color.fromARGB(255, 16, 16, 16),
           )

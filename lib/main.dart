@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -52,10 +53,14 @@ final theme = ThemeData(
 
 
 void main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
   unawaited(MobileAds.instance.initialize());
-  runApp(const App());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((fn) {
+    runApp(const App());
+  });
 }
 
 class App extends StatelessWidget {

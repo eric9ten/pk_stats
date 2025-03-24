@@ -60,7 +60,9 @@ class _StatCounter extends State<StatCounter>{
   @override
   Widget build(BuildContext context) {
   
-  const double textWidth = 55;
+  const double textWidth = 50;
+  const double statTextWidth = 20;
+  const double statTextPadding = 5;
 
   return Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -80,12 +82,12 @@ class _StatCounter extends State<StatCounter>{
                   border: OutlineInputBorder(),
                   counterText: '',
                   fillColor: Color.fromARGB(255, 130, 130, 130),
-                  contentPadding: EdgeInsets.all(5),
+                  contentPadding: EdgeInsets.all(4),
                 ),
                 showCursor: false,
                 textAlign: TextAlign.center,                    
                 style: GoogleFonts.dosis(
-                  fontSize: 24,
+                  fontSize: statTextWidth,
                   fontWeight: FontWeight.w500,
                   color: const Color.fromARGB(255, 36, 36, 36),
                 ),
@@ -128,7 +130,7 @@ class _StatCounter extends State<StatCounter>{
               showCursor: false,
               textAlign: TextAlign.center,                    
               style: GoogleFonts.dosis(
-                fontSize: 24,
+                fontSize: statTextWidth,
                 fontWeight: FontWeight.w500,
                 color: const Color.fromARGB(255, 36, 36, 36),
               ),

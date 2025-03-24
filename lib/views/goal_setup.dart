@@ -39,7 +39,6 @@ class _GoalSetupView extends State<GoalSetupView> {
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
 
-
     return Scaffold (
       appBar: AppBar (
         title: const Text ('Goal Setup'),

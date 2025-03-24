@@ -158,219 +158,230 @@ class _GameSetupView extends State<GameSetupView> {
   }
 
   @override
-  Widget build(BuildContext conntext) {
+  Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    
     return Scaffold ( 
       appBar: AppBar (
         title: const Text('Game Details'),
         ),
       body: 
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
-            child: Column(
-              children: [
-                Text('Enter Game Details',
-                  style: 
-                    Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    )
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 70),
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: Icon(
-                        Icons.calendar_month,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                      _selectedDate == null
-                          ? 'select a game date'
-                          : formatter.format(_selectedDate!),
-                      style:  
-                        Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        )
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 70),
-                    IconButton(
-                      onPressed: _presentTimePicker,
-                      icon: Icon(
-                        Icons.schedule,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                        _selectedTime == null
-                            ? 'enter the game time'
-                            : _selectedTime!.format(context),
-                        style: 
-                          Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          )
-                        ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 300,
-                      child: TextField(
-                        controller: _locationController,
-                        maxLength: 50,
-                        decoration: InputDecoration(
-                          label: const Text('Game Location'),
-                          fillColor: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row (
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25, right: 12),
-                      child: Text( 
-                        'Team A:',
-                        style: 
-                          Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          )
-                      ),
-                    ),
-                    Text(
-                        _teamA.name == '' ? 'Add team A' : _teamA.name,
-                        style: 
-                          Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          )
-                    ),
-                    IconButton(
-                      onPressed: _openAddTeamAOverlay, 
-                      icon: Icon (_teamA.name != "" ? Icons.edit : Icons.add_circle_outline),
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row (
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25, right: 16),
-                      child: Text( 
-                        'Team B:',
-                        style: 
-                          Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          )
-                      ),
-                    ),
-                    Text(
-                      _teamB.name == '' ? 'Add team B': _teamB.name,
-                      style: 
-                        Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        )
-                    ),
-                    IconButton(
-                      onPressed: _openAddTeamBOverlay, 
-                      icon: Icon (_teamB.name != "" ? Icons.edit : Icons.add_circle_outline),
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
-                ),
-                const Row(
-                  children: [
-                    SizedBox(height: 30),
-                  ]
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25),
-                      child: Text('Home Team',
-                        style:  
-                          Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          )
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Text('A',
-                      style:  
-                        Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        )
-                    ),
-                    const SizedBox(width: 10),
-                    Switch(
-                      value: _aIsHome,
-                      activeColor: Theme.of(context).colorScheme.primary,
-                      inactiveThumbColor: Theme.of(context).colorScheme.onPrimary,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _aIsHome = value;
-                        });
-                      }
-                    ),
-                    const SizedBox(width: 10),
-                    Text('B',
-                      style:  
-                        Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        )
-                    ),
-                  ],
-                ),
-                const Row(
-                  children: [
-                    SizedBox(height: 48),
-                  ]
-                ),
-                Row (
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: _updateGame,  
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.fromLTRB(40, 8, 40, 8),
-                      ),
-                      child: Text(
-                        'To Goal Setup',
-                        style:
-                          Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                // child: Padding(
+                //   padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+                  child: ConstrainedBox (
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: <Widget>[
+                          Text('Enter Game Details',
+                            style: 
+                              Theme.of(context).textTheme.titleMedium!.copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                              )
                           ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(width: 70),
+                              IconButton(
+                                onPressed: _presentDatePicker,
+                                icon: Icon(
+                                  Icons.calendar_month,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              Text(
+                                _selectedDate == null
+                                    ? 'select a game date'
+                                    : formatter.format(_selectedDate!),
+                                style:  
+                                  Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(context).colorScheme.secondary,
+                                  )
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(width: 70),
+                              IconButton(
+                                onPressed: _presentTimePicker,
+                                icon: Icon(
+                                  Icons.schedule,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              Text(
+                                  _selectedTime == null
+                                      ? 'enter the game time'
+                                      : _selectedTime!.format(context),
+                                  style: 
+                                    Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    )
+                                  ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 300,
+                                child: TextField(
+                                  controller: _locationController,
+                                  maxLength: 50,
+                                  decoration: InputDecoration(
+                                    label: const Text('Game Location'),
+                                    fillColor: Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Row (
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 25, right: 12),
+                                child: Text( 
+                                  'Team A:',
+                                  style: 
+                                    Theme.of(context).textTheme.titleSmall!.copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    )
+                                ),
+                              ),
+                              Text(
+                                  _teamA.name == '' ? 'Add team A' : _teamA.name,
+                                  style: 
+                                    Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    )
+                              ),
+                              IconButton(
+                                onPressed: _openAddTeamAOverlay, 
+                                icon: Icon (_teamA.name != "" ? Icons.edit : Icons.add_circle_outline),
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Row (
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 25, right: 16),
+                                child: Text( 
+                                  'Team B:',
+                                  style: 
+                                    Theme.of(context).textTheme.titleSmall!.copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    )
+                                ),
+                              ),
+                              Text(
+                                _teamB.name == '' ? 'Add team B': _teamB.name,
+                                style: 
+                                  Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Theme.of(context).colorScheme.secondary,
+                                  )
+                              ),
+                              IconButton(
+                                onPressed: _openAddTeamBOverlay, 
+                                icon: Icon (_teamB.name != "" ? Icons.edit : Icons.add_circle_outline),
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ],
+                          ),
+                          const Row(
+                            children: [
+                              SizedBox(height: 30),
+                            ]
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 25),
+                                child: Text('Home Team',
+                                  style:  
+                                    Theme.of(context).textTheme.titleSmall!.copyWith(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    )
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Text('A',
+                                style:  
+                                  Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Theme.of(context).colorScheme.secondary,
+                                  )
+                              ),
+                              const SizedBox(width: 10),
+                              Switch(
+                                value: _aIsHome,
+                                activeColor: Theme.of(context).colorScheme.primary,
+                                inactiveThumbColor: Theme.of(context).colorScheme.onPrimary,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    _aIsHome = value;
+                                  });
+                                }
+                              ),
+                              const SizedBox(width: 10),
+                              Text('B',
+                                style:  
+                                  Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Theme.of(context).colorScheme.secondary,
+                                  )
+                              ),
+                            ],
+                          ),
+                          const Row(
+                            children: [
+                              SizedBox(height: 48),
+                            ]
+                          ),
+                          Row (
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: _updateGame,  
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.fromLTRB(40, 8, 40, 8),
+                                ),
+                                child: Text(
+                                  'To Goal Setup',
+                                  style:
+                                    Theme.of(context).textTheme.titleMedium!.copyWith(
+                                      color: Theme.of(context).colorScheme.primary,
+                                    ),
+                                ),
+                              ),
+                            ]
+                          ),
+                          const Spacer(
+                            flex: 1,
+                          ),
+                          MyBannerAdWidget(),
+                        ],
                       ),
                     ),
-                  ]
-                ),
-                const Spacer(
-                  flex: 1,
-                ),
-                MyBannerAdWidget(),
-              ],
-            ),
+                  ),
+                // ),
+              );
+            }
           )
         );
   }

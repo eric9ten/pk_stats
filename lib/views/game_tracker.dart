@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'package:pk_stats/models/game_stats.dart';
 
@@ -298,256 +299,267 @@ class _GameTrackerView extends State<GameTrackerView> {
     }
 
     _updateTeams();
+    WakelockPlus.enable();
     
     return Scaffold(
       appBar: AppBar(
         title: const Text('Game Tracker'),
       ),
       body: 
-        Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GoalCounter(
-                      teamAbbrev: _leftTeam.abbrev, 
-                      direction: 'LTR', 
-                      teamColor: _leftTeam.color,
-                      callback: _updateLeftGoals,
-                      goalCount: _leftStats.goals,
-                    ),
-                    const GameStatTitle(
-                      title: 'Goals'
-                    ),
-                    GoalCounter(
-                      teamAbbrev: _rightTeam.abbrev, 
-                      direction: 'LTR', 
-                      teamColor: _rightTeam.color,
-                      callback: _updateRightGoals,
-                      goalCount: _rightStats.goals,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftPasses,
-                      statCount: _leftStats.passes,
-                    ),
-                    const GameStatTitle(
-                      title: 'Passes'
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightPasses,
-                      statCount: _rightStats.passes,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftShots,
-                      statCount: _leftStats.shots,
-                    ),
-                    const GameStatTitle(
-                      title: 'Shots'
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightShots,
-                      statCount: _rightStats.shots,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftCorners,
-                      statCount: _leftStats.corners,
-                    ),
-                    const GameStatTitle(
-                      title: 'Corners',
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightCorners,
-                      statCount: _rightStats.corners,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftGoalKicks,
-                      statCount: _leftStats.goalKicks,
-                    ),
-                    const GameStatTitle(
-                      title: 'Goal Kicks',
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightGoalKicks,
-                      statCount: _rightStats.goalKicks,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftTackles,
-                      statCount: _leftStats.tackles,
-                    ),
-                    const GameStatTitle(
-                      title: 'Tackles',
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightTackles,
-                      statCount: _rightStats.tackles,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftOffsides,
-                      statCount: _leftStats.offsides,
-                    ),
-                    const GameStatTitle(
-                      title: 'Offsides',
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightOffsides,
-                      statCount: _rightStats.offsides,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftFouls,
-                      statCount: _leftStats.fouls,
-                    ),
-                    const GameStatTitle(
-                      title: 'Fouls',
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightFouls,
-                      statCount: _rightStats.fouls,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftYellows,
-                      statCount: _leftStats.yellows,
-                    ),
-                    const GameStatTitle(
-                      title: 'Yellow Cards',
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightYellows,
-                      statCount: _rightStats.yellows,
-                    ),
-                  ],
-                ),
-                const Row (children: [ SizedBox(height: 10,)]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StatCounter(
-                      direction: 'LTR',
-                      callback: _updateLeftReds,
-                      statCount: _leftStats.reds,
-                    ),
-                    const GameStatTitle(
-                      title: 'Red Cards',
-                    ),
-                    StatCounter(
-                      direction: 'RTL',
-                      callback: _updateRightReds,
-                      statCount: _rightStats.reds,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Row (
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: _resetTracker, 
-                      icon: const Icon(Icons.restart_alt),
-                    ),
-                    TextButton(
-                      onPressed: () { 
-                        _toReview(context);
-                      },  
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.fromLTRB(40, 8, 40, 8),
+        LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints){
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 8,
                       ),
-                      child: Text(
-                        buttonLabel,
-                          style: const TextStyle(
-                            fontSize: 18,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GoalCounter(
+                            teamAbbrev: _leftTeam.abbrev, 
+                            direction: 'LTR', 
+                            teamColor: _leftTeam.color,
+                            callback: _updateLeftGoals,
+                            goalCount: _leftStats.goals,
                           ),
+                          const GameStatTitle(
+                            title: 'Goals'
+                          ),
+                          GoalCounter(
+                            teamAbbrev: _rightTeam.abbrev, 
+                            direction: 'LTR', 
+                            teamColor: _rightTeam.color,
+                            callback: _updateRightGoals,
+                            goalCount: _rightStats.goals,
+                          ),
+                        ],
                       ),
-                    ),
-                    
-                  ]
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftPasses,
+                            statCount: _leftStats.passes,
+                          ),
+                          const GameStatTitle(
+                            title: 'Passes'
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightPasses,
+                            statCount: _rightStats.passes,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftShots,
+                            statCount: _leftStats.shots,
+                          ),
+                          const GameStatTitle(
+                            title: 'Shots'
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightShots,
+                            statCount: _rightStats.shots,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftCorners,
+                            statCount: _leftStats.corners,
+                          ),
+                          const GameStatTitle(
+                            title: 'Corners',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightCorners,
+                            statCount: _rightStats.corners,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftGoalKicks,
+                            statCount: _leftStats.goalKicks,
+                          ),
+                          const GameStatTitle(
+                            title: 'Goal Kicks',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightGoalKicks,
+                            statCount: _rightStats.goalKicks,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftTackles,
+                            statCount: _leftStats.tackles,
+                          ),
+                          const GameStatTitle(
+                            title: 'Tackles',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightTackles,
+                            statCount: _rightStats.tackles,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftOffsides,
+                            statCount: _leftStats.offsides,
+                          ),
+                          const GameStatTitle(
+                            title: 'Offsides',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightOffsides,
+                            statCount: _rightStats.offsides,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftFouls,
+                            statCount: _leftStats.fouls,
+                          ),
+                          const GameStatTitle(
+                            title: 'Fouls',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightFouls,
+                            statCount: _rightStats.fouls,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftYellows,
+                            statCount: _leftStats.yellows,
+                          ),
+                          const GameStatTitle(
+                            title: 'Yellow Cards',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightYellows,
+                            statCount: _rightStats.yellows,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
+                            callback: _updateLeftReds,
+                            statCount: _leftStats.reds,
+                          ),
+                          const GameStatTitle(
+                            title: 'Red Cards',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightReds,
+                            statCount: _rightStats.reds,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row (
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: _resetTracker, 
+                            icon: const Icon(Icons.restart_alt),
+                          ),
+                          TextButton(
+                            onPressed: () { 
+                              _toReview(context);
+                              WakelockPlus.disable();
+                            },  
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.fromLTRB(40, 8, 40, 8),
+                            ),
+                            child: Text(
+                              buttonLabel,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                ),
+                            ),
+                          ),
+                          
+                        ]
+                      ),
+                      const Spacer(
+                        flex: 1,
+                      ),
+                      MyBannerAdWidget(),
+                    ],
+                  ),
                 ),
-                const Spacer(
-                  flex: 1,
-                ),
-                MyBannerAdWidget(),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
+        ),
     );
   }
 }

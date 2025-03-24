@@ -169,7 +169,7 @@ class GameViewPdf extends StatelessWidget {
               ),
             ]
           ),
-          pw.Row(
+          pw.Row( 
             mainAxisAlignment: pw.MainAxisAlignment.center,
             crossAxisAlignment: pw.CrossAxisAlignment.center,
             children: [
@@ -521,8 +521,7 @@ class GameViewPdf extends StatelessWidget {
                     )
                   ),
                   _divergingBarGraph(context, 'Corner Kicks', game.teamAStats.goalKicks, game.teamBStats.goalKicks),
-                  _divergingBarGraph(context, 'Fee Kicks', game.teamBStats.fouls, game.teamAStats.fouls),
-
+                  _divergingBarGraph(context, 'Free Kicks', game.teamBStats.fouls, game.teamAStats.fouls),
                 ],  
               )
             ),
