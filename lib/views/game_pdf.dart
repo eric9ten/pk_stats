@@ -94,17 +94,13 @@ class GameViewPdf extends StatelessWidget {
                 )
           );
         },
-        
       ),
     );
-
     // Build and return the final Pdf file data
     return await doc.save();
-    
   }
 
   Future<pw.PageTheme> _gamePageTheme(PdfPageFormat format) async {
-
       format = format.copyWith(
         marginLeft: 32,
         marginTop: 16,
@@ -131,6 +127,7 @@ class GameViewPdf extends StatelessWidget {
       pw.Column(
         children: [
           pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.center,
             children: [
               pw.Text(game.teamA.name,
                 style: const pw.TextStyle(
@@ -173,7 +170,7 @@ class GameViewPdf extends StatelessWidget {
             mainAxisAlignment: pw.MainAxisAlignment.center,
             crossAxisAlignment: pw.CrossAxisAlignment.center,
             children: [
-              pw.Text(game.isAHome ? 'Home' : 'Away',
+              pw.Text(game.isAHome ? 'Away' : 'Home',
                 style: const pw.TextStyle(
                   fontSize: 14,
                 ),
@@ -181,10 +178,11 @@ class GameViewPdf extends StatelessWidget {
               pw.SizedBox(
                 width: 32,
               ),
-              // pw.Icon(
-              //   const pw.IconData(0xe122), 
-              //   size: 14,
-              // ),
+              pw.Icon(
+                // const pw.IconData(0xe530), 
+                pw.IconData(0xe935),
+                size: 14,
+              ),
               pw.Text(DateFormat.yMMMd().format(game.date),
                 style: const pw.TextStyle(
                   fontSize: 14,
@@ -193,10 +191,10 @@ class GameViewPdf extends StatelessWidget {
               pw.SizedBox(
                 width: 32,
               ),
-              // pw.Icon(
-              //   const pw.IconData(0xe03a), 
-              //   size: 14,
-              // ),
+              pw.Icon(
+                const pw.IconData(0xe8b5), 
+                size: 14,
+              ),
               pw.Text('${game.time.hourOfPeriod}:${game.time.minute}',
                 style: const pw.TextStyle(
                   fontSize: 14,
@@ -205,7 +203,7 @@ class GameViewPdf extends StatelessWidget {
               pw.SizedBox(
                 width: 32,
               ),
-              pw.Text(game.isAHome ? 'Away' : 'Home',
+              pw.Text(game.isAHome ? 'Home' : 'Away',
                 style: const pw.TextStyle(
                   fontSize: 14,
                 ),

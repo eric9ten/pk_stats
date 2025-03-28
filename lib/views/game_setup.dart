@@ -110,7 +110,6 @@ class _GameSetupView extends State<GameSetupView> {
     final teamB = _teamB;
     final isAHome = _aIsHome;
     
-
     if (date == null || time == null || teamA.name == '' || teamB.name == '') {
       showDialog(
         context: context, 
@@ -168,8 +167,6 @@ class _GameSetupView extends State<GameSetupView> {
           LayoutBuilder(
             builder: (BuildContext context, BoxConstraints viewportConstraints) {
               return SingleChildScrollView(
-                // child: Padding(
-                //   padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
                   child: ConstrainedBox (
                     constraints: BoxConstraints(
                       minHeight: viewportConstraints.maxHeight),

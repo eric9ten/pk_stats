@@ -17,6 +17,7 @@ class GameTrackerView extends StatefulWidget {
   final Game game;
   int gameHalf;
 
+
   @override
   State<GameTrackerView> createState() {
     return _GameTrackerView();
@@ -140,8 +141,7 @@ class _GameTrackerView extends State<GameTrackerView> {
   }
 
   void _updateTeams() {
-    
-    if (_gameInfo.aIsDefendingRight) {
+    if (widget.game.aIsDefendingRight) {
       if (_gameHalf == 1) {
         _leftTeam = widget.game.teamB;
         _leftStats = widget.game.teamBStats;
@@ -529,7 +529,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                         children: [
                           IconButton(
                             onPressed: _resetTracker, 
-                            icon: const Icon(Icons.restart_alt),
+                            icon: const Icon(Icons.replay),
                           ),
                           TextButton(
                             onPressed: () { 
