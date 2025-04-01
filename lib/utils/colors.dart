@@ -12,3 +12,14 @@ Map<String, String> colorName = {
   'FF9C27B0': 'Purple', 
   'FF795548': 'Brown',
 };
+
+String convertArgbToHex(String argbColor) {
+  if (argbColor.length != 8) {
+    throw ArgumentError('Invalid ARGB color format');
+  }
+  
+  // Extract the RRGGBB part
+  String hexColor = argbColor.substring(2);
+  
+  return '#$hexColor';
+}
