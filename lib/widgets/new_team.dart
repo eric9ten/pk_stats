@@ -220,14 +220,17 @@ class _NewTeamState extends State<NewTeam> {
                                 decoration: BoxDecoration(
                                   color: _teamColor,
                                   borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+                                  border:  _teamColor!.toHexString() == 'FFFFFFFF' ? Border.all(color: Colors.grey) 
+                                    : Border.all(color: Colors.transparent)
                                 ),
                               ),
                             ),
                           ),
+
                           ],
                       ),
                     ],
-                  ),      
+                  ),     
                   const SizedBox(height: 40),
                   Row(
                     children: [

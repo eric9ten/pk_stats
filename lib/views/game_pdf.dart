@@ -551,10 +551,11 @@ class GameViewPdf extends StatelessWidget {
                         letterSpacing: -0.2,
                     )
                   ),
-                  _divergingBarGraph(context, 'Corner Kicks', game.teamAStats.goalKicks, game.teamBStats.goalKicks, teamAHexColor,
+                  _divergingBarGraph(context, 'Corner Kicks', game.teamAStats.corners, game.teamBStats.corners, teamAHexColor,
                     teamBHexColor),
-                  _divergingBarGraph(context, 'Free Kicks', game.teamBStats.fouls, game.teamAStats.fouls, teamAHexColor,
-                    teamBHexColor),
+                    // stats flipped: fouls give free kicks
+                  _divergingBarGraph(context, 'Free Kicks', game.teamBStats.fouls, game.teamAStats.fouls, teamBHexColor,
+                    teamAHexColor),
                 ],  
               )
             ),
