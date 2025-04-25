@@ -26,34 +26,29 @@ class GameReviewView extends StatelessWidget {
       buttonLabel = 'End Game';
     }
 
-    void continueGame() {
-      // final Game gameInfo = game;
-
-      if (gameHalf == 1) {
-        Navigator.pop(context, 2);
-      } else {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => GameViewPdf(game: game)
-          ),
-        );
-      }
+    void pdfReview() {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => GameViewPdf(game: game)
+        ),
+      );
     }
 
-  void resetGame() {
-    gameHalf = 1;
-    var stats =  GameStats(goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
-      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-    var team = Team(name: '', abbrev: '', color: '#000000');
-    game = Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', teamA: team, 
-      teamB: team, teamAStats: stats, teamBStats: stats, isAHome: false);
-    game.aIsDefendingRight = true;
-    game.aIsDefendingRight = false;
-    
-  }
 
-  void _restartGame() {    
-    showDialog(
+    void resetGame() {
+      gameHalf = 1;
+      var stats =  GameStats(goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
+        tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
+      var team = Team(name: '', abbrev: '', color: '#000000');
+      game = Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', teamA: team, 
+        teamB: team, teamAStats: stats, teamBStats: stats, isAHome: false);
+      game.aIsDefendingRight = true;
+      game.aIsDefendingRight = false;
+      
+    }
+
+    void restartGame() {    
+      showDialog(
         context: context, 
         builder: (ctx) => AlertDialog (
           title: const Text('Confirm Restart'),
@@ -83,8 +78,20 @@ class GameReviewView extends StatelessWidget {
           ],
         ),
       );
-  }
+    }
 
+    void continueGame() {
+      if (gameHalf == 1) {
+        Navigator.pop(context, 2);
+      } else {
+        restartGame();
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => GameViewPdf(game: game)
+        //   ),
+        // );
+      }
+    }
   
     return Scaffold(
       appBar: AppBar(
@@ -730,10 +737,6 @@ class GameReviewView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            IconButton(
-                              onPressed: _restartGame, 
-                              icon: const Icon(Icons.restart_alt),
-                            ),
                             TextButton(
                               onPressed: continueGame,  
                               style: TextButton.styleFrom(
@@ -746,11 +749,12 @@ class GameReviewView extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            IconButton(
+                              onPressed: pdfReview, 
+                              icon: const Icon(Icons.picture_as_pdf),
+                            ),
                           ],
                         ),
-                        // const Spacer(
-                        //   flex: 1,
-                        // ),
                         const SizedBox(
                           height: 16,
                         ),

@@ -17,13 +17,26 @@ class GameViewPdf extends StatelessWidget {
   
   final Game game;
   final PdfColor baseColor =  PdfColor.fromHex('#222222');
+
   
   @override
   Widget build(BuildContext context) {
+  
+    void continueGame() {
+      Navigator.pop(context);
+    }
+    
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Game Results'),
+          leading:        
+            IconButton(
+              onPressed: continueGame,
+              icon: const Icon(Icons.arrow_back),
+            ),
+          title: const Text('Game Report'),
+          centerTitle: true,
+          leadingWidth: 20,
           backgroundColor: const Color.fromARGB(255, 250, 250, 250),
           foregroundColor: const Color.fromRGBO(10, 10, 10, 1)
         ),
@@ -554,8 +567,8 @@ class GameViewPdf extends StatelessWidget {
                   _divergingBarGraph(context, 'Corner Kicks', game.teamAStats.corners, game.teamBStats.corners, teamAHexColor,
                     teamBHexColor),
                     // stats flipped: fouls give free kicks
-                  _divergingBarGraph(context, 'Free Kicks', game.teamBStats.fouls, game.teamAStats.fouls, teamBHexColor,
-                    teamAHexColor),
+                  _divergingBarGraph(context, 'Free Kicks', game.teamBStats.fouls, game.teamAStats.fouls, teamAHexColor,
+                    teamBHexColor),
                 ],  
               )
             ),
