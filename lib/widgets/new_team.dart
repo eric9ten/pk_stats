@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import 'package:pk_stats/providers/providers.dart';
 import 'package:pk_stats/models/team.dart';
 
-class NewTeam extends StatefulWidget {
-  const NewTeam({super.key, required this.onAddTeam, required this.team});
-  final void Function(Team team) onAddTeam;
+class NewTeam extends ConsumerStatefulWidget {
+  const NewTeam({super.key, required this.teamIndex, required this.team});
+
+  final int teamIndex;
   final Team team;
 
   @override
-  State<NewTeam> createState() {
-    return _NewTeamState();
-  }
+  ConsumerState<NewTeam> createState() => _NewTeamState();
+
 }
 
-class _NewTeamState extends State<NewTeam> {
+class _NewTeamState extends ConsumerState<NewTeam> {
   String _abbrev = '';
   late TextEditingController _nameController; // = TextEditingController(text:'To Be Announced');
   late TextEditingController _abbrevController; // = TextEditingController(text:'TBA');
-  late Color? _teamColor;
+  late Color _teamColor;
 
   void _updateTeam() {
     final teamName = _nameController.text.trim();
     final teamAbbrev = _abbrevController.text;
     final teamColor = _teamColor;
 
-    if (teamName.isEmpty || teamAbbrev.isEmpty ) {
+    if (teamName.isEmpty || teamAbbrev.isEmpty) {
       showDialog(
-        context: context, 
-        builder: (ctx) => AlertDialog (
+        context: context,
+        builder: (ctx) => AlertDialog(
           title: const Text('Invalid input'),
           content: const Text(
               'Please make sure a valid team name and abbreviation was entered.'),
@@ -42,18 +44,19 @@ class _NewTeamState extends State<NewTeam> {
           ],
         ),
       );
-
       return;
     }
 
-    widget.onAddTeam(
-      Team (
+    ref.read(teamListProvider.notifier).update((state) {
+      final newTeams = [...state];
+      newTeams[widget.teamIndex] = Team(
         abbrev: teamAbbrev,
         name: teamName,
-        color: teamColor!.toHexString(),
+        color: ColorExtension(teamColor).toHexString(),
+      );
+      return newTeams;
+    });
 
-      )
-    );
     Navigator.pop(context);
   }
 
@@ -121,14 +124,21 @@ class _NewTeamState extends State<NewTeam> {
   }  
   
   @override
-  void initState(){
-    _teamColor = widget.team.color != '' 
-      ? widget.team.color.toColor()
-       : Colors.black;
+  void initState() {
+    _teamColor = widget.team.color != ''
+        ? ColorExtension.toColor(widget.team.color)
+        : Colors.black;
     _nameController = TextEditingController(text: widget.team.name);
     _abbrevController = TextEditingController(text: widget.team.abbrev);
     super.initState();
-  }    
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _abbrevController.dispose();
+    super.dispose();
+  }  
 
   @override
   Widget build(BuildContext context) {
@@ -160,10 +170,6 @@ class _NewTeamState extends State<NewTeam> {
                             }
                           },
                           child: TextField(
-                            // focusNode: nameFocusNode,
-                            // onChanged: (text) {
-                            //   _getAbbreviation(text);
-                            // },
                             controller: _nameController,
                             maxLength: 50,
                             decoration: const InputDecoration(
@@ -220,7 +226,8 @@ class _NewTeamState extends State<NewTeam> {
                                 decoration: BoxDecoration(
                                   color: _teamColor,
                                   borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                                  border:  _teamColor!.toHexString() == 'FFFFFFFF' ? Border.all(color: Colors.grey) 
+                                  border:  ColorExtension(_teamColor).toHexString() == 'FFFFFFFF' 
+                                    ? Border.all(color: Colors.grey) 
                                     : Border.all(color: Colors.transparent)
                                 ),
                               ),

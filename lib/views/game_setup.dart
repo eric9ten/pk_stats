@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:pk_stats/models/team.dart';
 import 'package:pk_stats/models/game.dart';
@@ -7,116 +9,146 @@ import 'package:pk_stats/views/goal_setup.dart';
 import 'package:pk_stats/widgets/ad_banner.dart';
 import 'package:pk_stats/widgets/new_team.dart';
 import 'package:pk_stats/models/game_stats.dart';
+import 'package:pk_stats/providers/providers.dart';
 
 final formatter = DateFormat.yMd();
-const timeFormatter = TimeOfDayFormat.HH_colon_mm;
+const timeFormatter =  TimeOfDayFormat.HH_colon_mm;
 
-class GameSetupView extends StatefulWidget {
-  const GameSetupView({super.key, required this.game});
-  final Game game;
+class GameSetupView extends ConsumerStatefulWidget {
+  const GameSetupView({super.key});
 
   @override
-  State<GameSetupView> createState() {
-    return _GameSetupView();
+  ConsumerState<GameSetupView> createState() {
+    return _GameSetupViewState();
   }
 }
 
-class _GameSetupView extends State<GameSetupView> {
-  final _locationController = TextEditingController(text: 'TBD');
+class _GameSetupViewState extends ConsumerState<GameSetupView> {
+  final _teamANameController = TextEditingController();
+  final _teamBNameController = TextEditingController();
+  final _locationController = TextEditingController(text: 'TBD'); // Default to TBD
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-  late Team _teamA;
-  late Team _teamB;
-  bool _aIsHome = true;
-  late Game _game;
-  final int _gameHalf = 1;
-  final GameStats _teamAStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-        tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-  final GameStats _teamBStats = GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-        tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
+  bool _isAHome = true;
+  String? _errorMessage;
+
 
   @override
   void initState() {
     super.initState();
-     _game = widget.game;
-     _teamA = _game.teamA;
-     _teamB = _game.teamB;
+    // ref.read(gameListProvider.notifier).update((state) => []);
+    print('GameSetupView initState: _selectedDate=$_selectedDate, _selectedTime=$_selectedTime, _locationController.text=${_locationController.text}');
+    final games = ref.read(gameListProvider);
+     print('GameSetupView initState: games=$games');
+    if (games.isNotEmpty) {
+      final game = games.first;
+      print('Game: date=${game.date}, time=${game.time}, location=${game.location}');
+      _teamANameController.text = game.teamA?.name ?? '';
+      _teamBNameController.text = game.teamB?.name ?? '';
+      _locationController.text = game.location ?? 'TBD';
+      _selectedDate = game.date;
+      _selectedTime = game.time;
+      _isAHome = game.isAHome ?? true;
+    }  
+    // Ensure defaults are logged
+    print('After initState: _selectedDate=$_selectedDate, _selectedTime=$_selectedTime, _locationController.text=${_locationController.text}');
+  }
+
+  @override
+  void dispose() {
+    _teamANameController.dispose();
+    _teamBNameController.dispose();
+    _locationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _presentDatePicker() async {
+    final now = DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? now,
+      firstDate: now,
+      lastDate: DateTime(now.year + 1, now.month, now.day),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+        _errorMessage = null;
+      });
+    }
+  }
+
+  Future<void> _presentTimePicker() async {
+    final pickedTime = await showTimePicker(
+        context: context,
+        initialTime: _selectedTime ?? TimeOfDay.now(),
+        initialEntryMode: TimePickerEntryMode.inputOnly
+    );
+    if (pickedTime != null) {
+      setState(() {
+        _selectedTime = pickedTime;
+        _errorMessage = null;
+      });
+    }
   }
 
   void _openAddTeamAOverlay() {
     showModalBottomSheet(
-      backgroundColor: Colors.white,
-      useSafeArea: true,
-      isScrollControlled: true,
       context: context,
-      builder: (ctx) => NewTeam(onAddTeam: _addTeamA, team: _teamA),
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final teams = ref.watch(teamListProvider);
+            return NewTeam(
+              teamIndex: 0,
+              team: teams[0],
+            );
+          },
+        );
+      },
     );
   }
 
   void _openAddTeamBOverlay() {
     showModalBottomSheet(
-      backgroundColor: Colors.white,
-      useSafeArea: true,
+      context: context,
       isScrollControlled: true,
-      context: context,
-      builder: (ctx) => NewTeam(onAddTeam: _addTeamB, team: _teamB),
+      builder: (ctx) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final teams = ref.watch(teamListProvider);
+            return NewTeam(
+              teamIndex: 1,
+              team: teams[1],
+            );
+          },
+        );
+      },
     );
-  }
-
-  void _addTeamA(Team teamA) {
-    setState(() {
-      _teamA = teamA;
-    });
-  }
-
-  void _addTeamB(Team teamB) {
-    setState(() {
-      _teamB = teamB;
-    });
-  }
-
-  void _presentDatePicker() async {
-    final now = DateTime.now();
-    final firstDate = DateTime(now.year - 1, now.month, now.day);
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: firstDate,
-      lastDate: DateTime(now.year + 1, now.month, now.day),
-    );
-    setState(() {
-      _selectedDate = pickedDate;
-    });
-  }
-
-  void _presentTimePicker() async {
-    final now = TimeOfDay.now();
-    final pickedTime = await showTimePicker(
-        context: context,
-        initialTime: now,
-        initialEntryMode: TimePickerEntryMode.inputOnly);
-    setState(() {
-      _selectedTime = pickedTime;
-    });
   }
 
   void _updateGame() {
+    final teams = ref.read(teamListProvider);
+    final teamA = teams[0];
+    final teamB = teams[1];
+    final location = _locationController.text.trim().isEmpty ? 'TBD' : _locationController.text.trim();
+    final isAHome = ref.read(isAHomeProvider);
     final date = _selectedDate;
     final time = _selectedTime;
-    final location = _locationController.text;
-    final teamA = _teamA;
-    final teamAStats = _teamAStats;
-    final teamBStats = _teamBStats;
-    final teamB = _teamB;
-    final isAHome = _aIsHome;
     
-    if (date == null || time == null || teamA.name == '' || teamB.name == '') {
+    if (
+      date == null || 
+      time == null || 
+      teamA.name.isEmpty || 
+      teamB.name.isEmpty
+    ) {
       showDialog(
         context: context, 
         builder: (ctx) => AlertDialog (
           title: const Text('Invalid Game Info'),
           content: const Text(
-              'Please make sure a valid date, time, and teams was entered.'
+              'Please make sure a valid date, time, and team names were entered.'
             ),
           actions: [
             TextButton( 
@@ -132,33 +164,44 @@ class _GameSetupView extends State<GameSetupView> {
       return;
     }
 
-    final game = Game (
-      date: date,
-      time: time,
+    final updatedGame = Game(
+      id: const Uuid().v4(),
       location: location,
       teamA: teamA,
-      teamAStats: teamAStats,
+      teamAStats: GameStats(),
       teamB: teamB,
-      teamBStats: teamBStats,
+      teamBStats: GameStats(),
       isAHome: isAHome,
+      date: date,
+      time: time,
+      aIsDefendingRight: false,
     );
+
+    ref.read(gameListProvider.notifier).update((state) => [updatedGame]);
+    ref.read(leftStatsProvider.notifier).state = GameStats();
+    ref.read(rightStatsProvider.notifier).state = GameStats();
+    ref.read(gameHalfProvider.notifier).state = 1;
+    ref.read(aIsDefendingRightProvider.notifier).state = false;
 
     Navigator.push(
-      context, MaterialPageRoute(builder: (ctx) => 
-        GoalSetupView(game: game, gameHalf: _gameHalf,
-      ))
+      context, 
+      MaterialPageRoute(
+        builder: (ctx) => const GoalSetupView(),
+      )
     );
-  }
-
-  @override
-  void dispose() {
-    _locationController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final teams = ref.watch(teamListProvider);
+    final teamA = teams[0];
+    final teamB = teams[1];
+    final isAHome = ref.watch(isAHomeProvider);
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+
+    print('DATE: ${_selectedDate}');
+    print('TIME: ${_selectedTime}');
+
     return Scaffold ( 
       appBar: AppBar (
         title: const Text('Game Details'),
@@ -195,7 +238,7 @@ class _GameSetupView extends State<GameSetupView> {
                               Text(
                                 _selectedDate == null
                                     ? 'select a game date'
-                                    : formatter.format(_selectedDate!),
+                                    : DateFormat.yMd().format(_selectedDate!),
                                 style:  
                                   Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: Theme.of(context).colorScheme.secondary,
@@ -259,7 +302,7 @@ class _GameSetupView extends State<GameSetupView> {
                                 ),
                               ),
                               Text(
-                                  _teamA.name == '' ? 'Add team A' : _teamA.name,
+                                  teamA.name.isEmpty ? 'Add team A' : teamA.name,
                                   style: 
                                     Theme.of(context).textTheme.bodySmall!.copyWith(
                                       color: Theme.of(context).colorScheme.secondary,
@@ -267,7 +310,10 @@ class _GameSetupView extends State<GameSetupView> {
                               ),
                               IconButton(
                                 onPressed: _openAddTeamAOverlay, 
-                                icon: Icon (_teamA.name != "" ? Icons.edit : Icons.add_circle_outline),
+                                icon: Icon (teamA.name.isNotEmpty 
+                                  ? Icons.edit 
+                                  : Icons.add_circle_outline
+                                ),
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                             ],
@@ -288,7 +334,9 @@ class _GameSetupView extends State<GameSetupView> {
                                 ),
                               ),
                               Text(
-                                _teamB.name == '' ? 'Add team B': _teamB.name,
+                                teamB.name.isEmpty 
+                                  ? 'Add team B'
+                                  : teamB.name,
                                 style: 
                                   Theme.of(context).textTheme.bodySmall!.copyWith(
                                     color: Theme.of(context).colorScheme.secondary,
@@ -296,7 +344,11 @@ class _GameSetupView extends State<GameSetupView> {
                               ),
                               IconButton(
                                 onPressed: _openAddTeamBOverlay, 
-                                icon: Icon (_teamB.name != "" ? Icons.edit : Icons.add_circle_outline),
+                                icon: Icon (
+                                  teamB.name.isNotEmpty 
+                                  ? Icons.edit 
+                                  : Icons.add_circle_outline
+                                ),
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                             ],
@@ -326,14 +378,12 @@ class _GameSetupView extends State<GameSetupView> {
                               ),
                               const SizedBox(width: 10),
                               Switch(
-                                value: _aIsHome,
+                                value: isAHome,
                                 activeColor: Theme.of(context).colorScheme.primary,
                                 inactiveThumbColor: Theme.of(context).colorScheme.onPrimary,
                                 onChanged: (bool value) {
-                                  setState(() {
-                                    _aIsHome = value;
-                                  });
-                                }
+                                  ref.read(isAHomeProvider.notifier).state = value;
+                                },
                               ),
                               const SizedBox(width: 10),
                               Text('B',
@@ -376,10 +426,9 @@ class _GameSetupView extends State<GameSetupView> {
                       ),
                     ),
                   ),
-                // ),
               );
             }
           )
-        );
+    );
   }
 }

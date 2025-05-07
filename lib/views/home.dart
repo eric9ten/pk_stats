@@ -1,29 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
+import 'package:pk_stats/providers/providers.dart';
 import 'package:pk_stats/views/game_setup.dart';
 import 'package:pk_stats/models/team.dart';
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/models/game_stats.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   HomeScreen({super.key, required this.title});
   final String title;
-  final Game game =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
-    teamA: Team(name: '', abbrev: '', color: ''),
-    teamB: Team(name: '', abbrev: '', color: ''),
-    teamAStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
-    teamBStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
-    isAHome: true);
 
   @override
-  Widget build(BuildContext context) {
-    Game gameInfo = game;
-
+  Widget build(BuildContext context, WidgetRef ref) {
     void startGame() {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => 
-          GameSetupView(game: gameInfo))
+      // Reset all providers to initial state
+      ref.read(gameListProvider.notifier).update((state) => [
+            Game(
+              id: const Uuid().v4(),
+              location: '',
+              teamA: Team(name: '', abbrev: '', color: 'FF000000'),
+              teamB: Team(name: '', abbrev: '', color: 'FF000000'),
+              teamAStats: GameStats(),
+              teamBStats: GameStats(),
+              isAHome: true,
+              date: DateTime.now(),
+              time: TimeOfDay.now(),
+              aIsDefendingRight: true,
+            )
+          ]);
+      ref.read(teamListProvider.notifier).update((state) => [
+            Team(name: '', abbrev: '', color: 'FF000000'),
+            Team(name: '', abbrev: '', color: 'FF000000'),
+          ]);
+      ref.read(isAHomeProvider.notifier).state = true;
+      ref.read(aIsDefendingRightProvider.notifier).state = true;
+      ref.read(gameHalfProvider.notifier).state = 1;
+      ref.read(leftStatsProvider.notifier).state = GameStats();
+      ref.read(rightStatsProvider.notifier).state = GameStats();
+
+      // Navigate to GameSetupView
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (ctx) => const GameSetupView()),
       );
     }
 

@@ -1,97 +1,118 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:pk_stats/views/game_setup.dart';
+import 'package:uuid/uuid.dart';
 
+import 'package:pk_stats/providers/providers.dart';
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/models/game_stats.dart';
 import 'package:pk_stats/models/team.dart';
 import 'package:pk_stats/views/game_pdf.dart';
-// import 'package:pk_stats/views/game_setup.dart';
 import 'package:pk_stats/widgets/colored_title.dart';
 import 'package:pk_stats/widgets/ad_banner.dart';
 
 
-class GameReviewView extends StatelessWidget {
-  GameReviewView({super.key, required this.gameHalf, required this.game});
-
-  int gameHalf;
-  Game game;
+class GameReviewView extends ConsumerWidget {
+  const GameReviewView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    String halfLabel = 'Halftime';
-    String buttonLabel = 'Start 2nd Half';
+  Widget build(BuildContext context, WidgetRef ref) {
+    final games = ref.watch(gameListProvider);
+    final gameHalf = ref.watch(gameHalfProvider);
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    final formatter = DateFormat.yMd();
 
-    if (gameHalf == 2) {
-      halfLabel = 'Final';
-      buttonLabel = 'End Game';
+    if (games.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Game Review')),
+        body: const Center(child: Text('No game data available')),
+      );
     }
+
+    final game = games.first;
+    final teamAStats = game.teamAStats ?? GameStats();
+    final teamBStats = game.teamBStats ?? GameStats();
+
+    String halfLabel = gameHalf == 1 ? 'Halftime' : 'Final';
+    String buttonLabel = gameHalf == 1 ? 'Start 2nd Half' : 'Restart';
 
     void pdfReview() {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => GameViewPdf(game: game)
+          builder: (context) => GamePdfView()
         ),
       );
     }
-
 
     void resetGame() {
-      gameHalf = 1;
-      var stats =  GameStats(goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
-        tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-      var team = Team(name: '', abbrev: '', color: '#000000');
-      game = Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', teamA: team, 
-        teamB: team, teamAStats: stats, teamBStats: stats, isAHome: false);
-      game.aIsDefendingRight = true;
-      game.aIsDefendingRight = false;
+      ref.read(gameListProvider.notifier).update((state) => [
+            Game(
+              id: const Uuid().v4(),
+              location: 'TBD',
+              teamA: Team(name: '', abbrev: '', color: 'FF000000'),
+              teamB: Team(name: '', abbrev: '', color: 'FFFFFFFF'),
+              teamAStats: GameStats(),
+              teamBStats: GameStats(),
+              isAHome: false,
+              date: null,
+              time: null,
+              aIsDefendingRight: true,
+            )
+          ]);
+      ref.read(teamListProvider.notifier).update((state) => [
+            Team(name: '', abbrev: '', color: 'FF000000'),
+            Team(name: '', abbrev: '', color: 'FFFFFFFF'),
+          ]);
+      ref.read(isAHomeProvider.notifier).state = false;
+      ref.read(aIsDefendingRightProvider.notifier).state = false;
+      ref.read(gameHalfProvider.notifier).state = 1;
+      ref.read(leftStatsProvider.notifier).state = GameStats();
+      ref.read(rightStatsProvider.notifier).state = GameStats();
       
     }
+  
+  void restartGame() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirm Restart'),
+        content: const Text('Are you sure you want to restart the game?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              resetGame();
+              Navigator.of(ctx).popUntil((route) => route.isFirst);
+              Navigator.push(
+                ctx,
+                MaterialPageRoute(
+                  builder: (context) => const GameSetupView(),
+                ),
+              );
+            },
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+  }
 
-    void restartGame() {    
-      showDialog(
-        context: context, 
-        builder: (ctx) => AlertDialog (
-          title: const Text('Confirm Restart'),
-          content: const Text(
-              'Are you sure you want to restart the game?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                resetGame();
-                Navigator.of(ctx).popUntil((route) => route.isFirst);
-                // Navigator.pushAndRemoveUntil(
-                //   ctx,
-                //   MaterialPageRoute(
-                //     builder: (context) => GameSetupView(game: game)
-                //   ),
-                //   (Route route) => false,
-                // )
-              },
-              child: const Text('Confirm'),
-            ),
-          ],
-        ),
-      );
+  void continueGame(WidgetRef ref, int gameHalf, BuildContext context) {
+    if (gameHalf == 1) {
+      ref.read(gameHalfProvider.notifier).state = 2;
+      ref.read(aIsDefendingRightProvider.notifier).state =
+          !ref.read(aIsDefendingRightProvider);
+      Navigator.pop(context, 2);
+    } else {
+      restartGame;
     }
-
-    void continueGame() {
-      if (gameHalf == 1) {
-        Navigator.pop(context, 2);
-      } else {
-        restartGame();
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => GameViewPdf(game: game)
-        //   ),
-        // );
-      }
-    }
+  }
   
     return Scaffold(
       appBar: AppBar(
@@ -112,7 +133,7 @@ class GameReviewView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(formatter.format(game.date),
+                      Text(formatter.format(game.date!),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -131,7 +152,7 @@ class GameReviewView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(game.time.format(context),
+                      Text(game.time!.format(context),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -172,8 +193,8 @@ class GameReviewView extends StatelessWidget {
                                       TableCell(
                                         child: 
                                         ColoredTitle(
-                                          title: game.teamA.abbrev,
-                                          color: game.teamA.color
+                                          title: game.teamA!.abbrev,
+                                          color: game.teamA!.color
                                         ),
                                       ),
                                       const TableCell(
@@ -183,8 +204,8 @@ class GameReviewView extends StatelessWidget {
                                         verticalAlignment: TableCellVerticalAlignment.middle,
                                         child: 
                                         ColoredTitle(
-                                          title: game.teamB.abbrev,
-                                          color: game.teamB.color
+                                          title: game.teamB!.abbrev,
+                                          color: game.teamB!.color
                                         ),
                                       )
                                     ],
@@ -221,7 +242,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.goals.toString(),
+                                            game.teamAStats!.goals.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -249,7 +270,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.goals.toString(),
+                                            game.teamBStats!.goals.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -269,7 +290,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.passes.toString(),
+                                            game.teamAStats!.passes.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -296,7 +317,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.passes.toString(),
+                                            game.teamBStats!.passes.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -313,7 +334,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.shots.toString(),
+                                            game.teamAStats!.shots.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -340,7 +361,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.shots.toString(),
+                                            game.teamBStats!.shots.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -360,7 +381,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.corners.toString(),
+                                            game.teamAStats!.corners.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -392,7 +413,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.corners.toString(),
+                                            game.teamBStats!.corners.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -409,7 +430,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.goalKicks.toString(),
+                                            game.teamAStats!.goalKicks.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -441,7 +462,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.goalKicks.toString(),
+                                            game.teamBStats!.goalKicks.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -461,7 +482,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.tackles.toString(),
+                                            game.teamAStats!.tackles.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -492,7 +513,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.tackles.toString(),
+                                            game.teamBStats!.tackles.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -509,7 +530,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.offsides.toString(),
+                                            game.teamAStats!.offsides.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -540,7 +561,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.offsides.toString(),
+                                            game.teamBStats!.offsides.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -560,7 +581,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.fouls.toString(),
+                                            game.teamAStats!.fouls.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -591,7 +612,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.fouls.toString(),
+                                            game.teamBStats!.fouls.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -643,7 +664,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.yellows.toString(),
+                                            game.teamAStats!.yellows.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -667,7 +688,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.yellows.toString(),
+                                            game.teamBStats!.yellows.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -684,7 +705,7 @@ class GameReviewView extends StatelessWidget {
                                       children: <Widget>[
                                         TableCell(
                                           child: Text(
-                                            game.teamAStats.reds.toString(),
+                                            game.teamAStats!.reds.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -708,7 +729,7 @@ class GameReviewView extends StatelessWidget {
                                         ),
                                         TableCell(
                                           child: Text(
-                                            game.teamBStats.reds.toString(),
+                                            game.teamBStats!.reds.toString(),
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -738,7 +759,7 @@ class GameReviewView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             TextButton(
-                              onPressed: continueGame,  
+                              onPressed: () => continueGame(ref, gameHalf, context),  
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.fromLTRB(40, 8, 40, 8),
                               ),
@@ -751,7 +772,8 @@ class GameReviewView extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: pdfReview, 
-                              icon: const Icon(Icons.picture_as_pdf),
+                              icon: const Icon(Icons.leaderboard_outlined),
+                              color: Colors.amber[700],
                             ),
                           ],
                         ),

@@ -1,6 +1,8 @@
 
 class GameStats {
   GameStats({
+    this.goals1 = 0,
+    this.goals2 = 0,
     this.goals = 0,
     this.passes = 0,
     this.shots = 0,
@@ -14,6 +16,8 @@ class GameStats {
 
   });
 
+  int goals1;
+  int goals2;
   int goals;
   int passes;
   int shots;

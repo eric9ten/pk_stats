@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pk_stats/views/game_setup.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:uuid/uuid.dart';
 
+import 'package:pk_stats/providers/providers.dart';
 import 'package:pk_stats/models/game_stats.dart';
 
 import 'package:pk_stats/models/game.dart';
@@ -11,80 +15,47 @@ import 'package:pk_stats/widgets/game_stat_title.dart';
 import 'package:pk_stats/views/game_review.dart';
 import 'package:pk_stats/widgets/ad_banner.dart';
 
-class GameTrackerView extends StatefulWidget {
-  GameTrackerView ({ super.key, required this.game, required this.gameHalf});
-
-  final Game game;
-  int gameHalf;
-
+class GameTrackerView extends ConsumerStatefulWidget {
+  const GameTrackerView ({super.key});
 
   @override
-  State<GameTrackerView> createState() {
-    return _GameTrackerView();
+  ConsumerState<GameTrackerView> createState() {
+    return _GameTrackerViewState();
   }
-
 }
 
-class _GameTrackerView extends State<GameTrackerView> {
-  GameStats _leftStats = GameStats(
-    goals: 0, shots: 0, corners: 0, goalKicks: 0,
-    tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-  GameStats _rightStats = GameStats(
-    goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
-    tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-  Team _leftTeam = Team(name: '', abbrev: '', color: '');
-  Team _rightTeam = Team(name: '', abbrev: '', color: '');
-  final Game _gameInfo =  Game(date: DateTime.now(), time: TimeOfDay.now(), location: '', 
-    teamA: Team(name: '', abbrev: '', color: ''),
-    teamB: Team(name: '', abbrev: '', color: ''),
-    teamAStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
-    teamBStats: GameStats(goals: 0, shots: 0, corners: 0, goalKicks: 0,
-      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0),
-    isAHome: true);
-  int _gameHalf = 1;
-
+class _GameTrackerViewState extends ConsumerState<GameTrackerView> {
   Future<void> _toReview(BuildContext context) async {
-    if (widget.game.aIsDefendingRight) {
-      if (widget.gameHalf == 1) {
-        widget.game.teamB = _leftTeam;
-        widget.game.teamBStats = _leftStats;
-        widget.game.teamA = _rightTeam;
-        widget.game.teamAStats = _rightStats;
-      } else {
-        widget.game.teamA = _leftTeam;
-        widget.game.teamAStats = _leftStats;
-        widget.game.teamB = _rightTeam;
-        widget.game.teamBStats = _rightStats;
-      }
-    } else {
-      if (widget.gameHalf == 1) {
-        widget.game.teamA = _leftTeam;
-        widget.game.teamAStats = _leftStats;
-        widget.game.teamB = _rightTeam;
-        widget.game.teamBStats = _rightStats;
-      } else {
-        widget.game.teamB = _leftTeam;
-        widget.game.teamBStats = _leftStats;
-        widget.game.teamA = _rightTeam;
-        widget.game.teamAStats = _rightStats;
-      }
+    final games = ref.read(gameListProvider);
+    final gameHalf = ref.read(gameHalfProvider);
+    if (games.isEmpty) {
+      _showErrorDialog('No game data available');
+      return;
     }
+
+    final game = games.first;
+    final updatedGame = _updateGameStats(game, gameHalf);
+    ref.read(gameListProvider.notifier).update((state) => [updatedGame]);
 
     final result = await Navigator.push(
-      context, 
+      context,
       MaterialPageRoute(
-        builder: (context) => 
-         GameReviewView(game: widget.game, gameHalf: widget.gameHalf)
-      )
+        builder: (context) => GameReviewView(),
+      ),
     );
-
-    if(context.mounted) {
-      setState(() {
-        _gameHalf = result;
-        widget.gameHalf = result;
-      });
+    
+    if (context.mounted && result != null && result is int) {
+      ref.read(gameHalfProvider.notifier).state = result;
+      if (result == 2) {
+        // Swap stats between leftStatsProvider and rightStatsProvider for GameTrackerView
+        final leftStats = ref.read(leftStatsProvider);
+        final rightStats = ref.read(rightStatsProvider);
+        ref.read(leftStatsProvider.notifier).state = rightStats;
+        ref.read(rightStatsProvider.notifier).state = leftStats;
+        WakelockPlus.enable(); // Re-enable WakelockPlus for second half
+      }
     }
+
   }
 
   void _resetTracker() {    
@@ -114,191 +85,143 @@ class _GameTrackerView extends State<GameTrackerView> {
   }
 
   void _resetStats() {
-    widget.game.teamAStats =  GameStats(goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
-      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-    widget.game.teamBStats = GameStats(goals: 0, passes: 0, shots: 0, corners: 0, goalKicks: 0,
-      tackles: 0, offsides: 0, fouls: 0, yellows: 0, reds: 0);
-    _updateLeftGoals(0);
-    _updateLeftPasses(0);
-    _updateLeftShots(0);
-    _updateLeftCorners(0);
-    _updateLeftGoalKicks(0);
-    _updateLeftTackles(0);
-    _updateLeftOffsides(0);
-    _updateLeftFouls(0);
-    _updateLeftYellows(0);
-    _updateLeftReds(0);
-    _updateRightGoals(0);
-    _updateRightPasses(0);
-    _updateRightShots(0);
-    _updateRightCorners(0);
-    _updateRightGoalKicks(0);
-    _updateRightTackles(0);
-    _updateRightOffsides(0);
-    _updateRightFouls(0);
-    _updateRightYellows(0);
-    _updateRightReds(0);
+    final games = ref.read(gameListProvider);
+    if (games.isNotEmpty) {
+      final game = games.first;
+      ref.read(gameListProvider.notifier).update((state) => [
+            Game(
+              id: game.id,
+              location: game.location,
+              teamA: game.teamA,
+              teamB: game.teamB,
+              teamAStats: GameStats(),
+              teamBStats: GameStats(),
+              isAHome: game.isAHome,
+              date: game.date,
+              time: game.time,
+              aIsDefendingRight: game.aIsDefendingRight,
+            )
+          ]);
+    }
+    ref.read(leftStatsProvider.notifier).state = GameStats();
+    ref.read(rightStatsProvider.notifier).state = GameStats();
+    ref.read(gameHalfProvider.notifier).state = 1;
   }
 
-  void _updateTeams() {
-    if (widget.game.aIsDefendingRight) {
-      if (_gameHalf == 1) {
-        _leftTeam = widget.game.teamB;
-        _leftStats = widget.game.teamBStats;
-        _rightTeam = widget.game.teamA; 
-        _rightStats = widget.game.teamAStats;
-      } else {
-        _leftTeam = widget.game.teamA; 
-        _leftStats = widget.game.teamAStats;
-        _rightTeam = widget.game.teamB; 
-        _rightStats = widget.game.teamBStats;
-      }
+Game _updateGameStats(Game game, int gameHalf) {
+    final aIsDefendingRight = ref.read(aIsDefendingRightProvider);
+    final leftStats = ref.read(leftStatsProvider);
+    final rightStats = ref.read(rightStatsProvider);
+
+    GameStats? teamAStats;
+    GameStats? teamBStats;
+
+    if (gameHalf == 1) {
+      teamAStats = aIsDefendingRight ? rightStats : leftStats;
+      teamBStats = aIsDefendingRight ? leftStats : rightStats;
     } else {
-      if (_gameHalf == 1) {
-        _leftTeam = widget.game.teamA;
-        _leftStats = widget.game.teamAStats;
-        _rightTeam = widget.game.teamB;
-        _rightStats = widget.game.teamBStats;
-      } else {
-        _leftTeam = widget.game.teamB;
-        _leftStats = widget.game.teamBStats;
-        _rightTeam = widget.game.teamA;
-        _rightStats = widget.game.teamAStats;
-      }
+      teamAStats = aIsDefendingRight ? rightStats : leftStats;
+      teamBStats = aIsDefendingRight ? leftStats : rightStats;
     }
 
+    return Game(
+      id: game.id,
+      location: game.location,
+      teamA: game.teamA,
+      teamB: game.teamB,
+      teamAStats: teamAStats,
+      teamBStats: teamBStats,
+      isAHome: game.isAHome,
+      date: game.date,
+      time: game.time,
+      aIsDefendingRight: aIsDefendingRight,
+    );
   }
 
-  void _updateLeftGoals(int count) {
-    setState(() {
-      _leftStats.goals = count;
-    });
+  void _updateStat({
+  required StatType statType,
+  required int count,
+  required bool isLeft,
+  }) {
+    final provider = isLeft ? leftStatsProvider : rightStatsProvider;
+    ref.read(provider.notifier).update((state) => GameStats(
+          goals: statType == StatType.goals ? count : state.goals,
+          passes: statType == StatType.passes ? count : state.passes,
+          shots: statType == StatType.shots ? count : state.shots,
+          corners: statType == StatType.corners ? count : state.corners,
+          goalKicks: statType == StatType.goalKicks ? count : state.goalKicks,
+          tackles: statType == StatType.tackles ? count : state.tackles,
+          offsides: statType == StatType.offsides ? count : state.offsides,
+          fouls: statType == StatType.fouls ? count : state.fouls,
+          yellows: statType == StatType.yellows ? count : state.yellows,
+          reds: statType == StatType.reds ? count : state.reds,
+      ));
   }
+  
+  void _updateLeftGoals(int count) => _updateStat(statType: StatType.goals, count: count, isLeft: true);
+  void _updateRightGoals(int count) => _updateStat(statType: StatType.goals, count: count, isLeft: false);
+  void _updateLeftPasses(int count) => _updateStat(statType: StatType.passes, count: count, isLeft: true);
+  void _updateRightPasses(int count) => _updateStat(statType: StatType.passes, count: count, isLeft: false);
+  void _updateLeftShots(int count) => _updateStat(statType: StatType.shots, count: count, isLeft: true);
+  void _updateRightShots(int count) => _updateStat(statType: StatType.shots, count: count, isLeft: false);
+  void _updateLeftCorners(int count) => _updateStat(statType: StatType.corners, count: count, isLeft: true);
+  void _updateRightCorners(int count) => _updateStat(statType: StatType.corners, count: count, isLeft: false);
+  void _updateLeftGoalKicks(int count) => _updateStat(statType: StatType.goalKicks, count: count, isLeft: true);
+  void _updateRightGoalKicks(int count) => _updateStat(statType: StatType.goalKicks, count: count, isLeft: false);
+  void _updateLeftTackles(int count) => _updateStat(statType: StatType.tackles, count: count, isLeft: true);
+  void _updateRightTackles(int count) => _updateStat(statType: StatType.tackles, count: count, isLeft: false);
+  void _updateLeftOffsides(int count) => _updateStat(statType: StatType.offsides, count: count, isLeft: true);
+  void _updateRightOffsides(int count) => _updateStat(statType: StatType.offsides, count: count, isLeft: false);
+  void _updateLeftFouls(int count) => _updateStat(statType: StatType.fouls, count: count, isLeft: true);
+  void _updateRightFouls(int count) => _updateStat(statType: StatType.fouls, count: count, isLeft: false);
+  void _updateLeftYellows(int count) => _updateStat(statType: StatType.yellows, count: count, isLeft: true);
+  void _updateRightYellows(int count) => _updateStat(statType: StatType.yellows, count: count, isLeft: false);
+  void _updateLeftReds(int count) => _updateStat(statType: StatType.reds, count: count, isLeft: true);
+  void _updateRightReds(int count) => _updateStat(statType: StatType.reds, count: count, isLeft: false);
 
-  void _updateRightGoals(int count) {
-    setState(() {
-      _rightStats.goals = count;
-    });
-  }
-
-  void _updateLeftPasses(int count) {
-    setState(() {
-      _leftStats.passes = count;
-    });
-  }
-
-  void _updateRightPasses(int count) {
-    setState(() {
-      _rightStats.passes = count;
-    });
-  }
-
-  void _updateLeftShots(int count) {
-    setState(() {
-      _leftStats.shots = count;
-    });
-  }
-
-  void _updateRightShots(int count) {
-    setState(() {
-      _rightStats.shots = count;
-    });
-  }
-
-  void _updateLeftCorners(int count) {
-    setState(() {
-      _leftStats.corners = count;
-    });
-  }
-
-  void _updateRightCorners(int count) {
-    setState(() {
-      _rightStats.corners = count;
-    });
-  }
-
-  void _updateLeftGoalKicks(int count) {
-    setState(() {
-      _leftStats.goalKicks = count;
-    });
-  }
-
-  void _updateRightGoalKicks(int count) {
-    setState(() {
-      _rightStats.goalKicks = count;
-    });
-  }
-
-  void _updateLeftTackles(int count) {
-    setState(() {
-      _leftStats.tackles = count;
-    });
-  }
-
-  void _updateRightTackles(int count) {
-    setState(() {
-      _rightStats.tackles = count;
-    });
-  }
-
-  void _updateLeftOffsides(int count) {
-    setState(() {
-      _leftStats.offsides = count;
-    });
-  }
-
-  void _updateRightOffsides(int count) {
-    setState(() {
-      _rightStats.offsides = count;
-    });
-  }
-
-  void _updateLeftFouls(int count) {
-    setState(() {
-      _leftStats.fouls = count;
-    });
-  }
-
-  void _updateRightFouls(int count) {
-    setState(() {
-      _rightStats.fouls = count;
-    });
-  }
-
-  void _updateLeftYellows(int count) {
-    setState(() {
-      _leftStats.yellows = count;
-    });
-  }
-
-  void _updateRightYellows(int count) {
-    setState(() {
-      _rightStats.yellows = count;
-    });
-  }
-
-  void _updateLeftReds(int count) {
-    setState(() {
-      _leftStats.reds = count;
-    });
-  }
-
-  void _updateRightReds(int count) {
-    setState(() {
-      _rightStats.reds = count;
-    });
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Okay'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override 
   Widget build(BuildContext context) {
-    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    
-    String buttonLabel = 'End 1st Half';
-    if ( widget.gameHalf == 2) {
-      buttonLabel = 'End 2nd Half';
+    final games = ref.watch(gameListProvider);
+    final gameHalf = ref.watch(gameHalfProvider);
+
+    if (games.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Game Tracker')),
+        body: const Center(child: Text('No game data available')),
+      );
     }
 
-    _updateTeams();
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    final game = games.first;
+
+    Team leftTeam;
+    Team rightTeam;
+    GameStats leftStats = ref.watch(leftStatsProvider);
+    GameStats rightStats = ref.watch(rightStatsProvider);
+
+    final aIsDefendingRight = ref.watch(aIsDefendingRightProvider);
+    leftTeam = aIsDefendingRight ? game.teamB! : game.teamA!;
+    rightTeam = aIsDefendingRight ? game.teamA! : game.teamB!;
+
+    final displayHalf = (gameHalf >= 1 && gameHalf <= 2) ? gameHalf : 1;
+    final buttonLabel = displayHalf == 1 ? 'Halftime' : 'End Game';
+
     WakelockPlus.enable();
     
     return Scaffold(
@@ -323,21 +246,21 @@ class _GameTrackerView extends State<GameTrackerView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           GoalCounter(
-                            teamAbbrev: _leftTeam.abbrev, 
+                            teamAbbrev: leftTeam.abbrev, 
                             direction: 'LTR', 
-                            teamColor: _leftTeam.color,
+                            teamColor: leftTeam.color,
                             callback: _updateLeftGoals,
-                            goalCount: _leftStats.goals,
+                            goalCount: leftStats.goals,
                           ),
                           const GameStatTitle(
                             title: 'Goals'
                           ),
                           GoalCounter(
-                            teamAbbrev: _rightTeam.abbrev, 
+                            teamAbbrev: rightTeam.abbrev, 
                             direction: 'LTR', 
-                            teamColor: _rightTeam.color,
+                            teamColor: rightTeam.color,
                             callback: _updateRightGoals,
-                            goalCount: _rightStats.goals,
+                            goalCount: rightStats.goals,
                           ),
                         ],
                       ),
@@ -348,7 +271,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftPasses,
-                            statCount: _leftStats.passes,
+                            statCount: leftStats.passes,
                           ),
                           const GameStatTitle(
                             title: 'Passes'
@@ -356,7 +279,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightPasses,
-                            statCount: _rightStats.passes,
+                            statCount: rightStats.passes,
                           ),
                         ],
                       ),
@@ -368,7 +291,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftShots,
-                            statCount: _leftStats.shots,
+                            statCount: leftStats.shots,
                           ),
                           const GameStatTitle(
                             title: 'Shots'
@@ -376,7 +299,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightShots,
-                            statCount: _rightStats.shots,
+                            statCount: rightStats.shots,
                           ),
                         ],
                       ),
@@ -388,7 +311,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftCorners,
-                            statCount: _leftStats.corners,
+                            statCount: leftStats.corners,
                           ),
                           const GameStatTitle(
                             title: 'Corners',
@@ -396,7 +319,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightCorners,
-                            statCount: _rightStats.corners,
+                            statCount: rightStats.corners,
                           ),
                         ],
                       ),
@@ -408,7 +331,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftGoalKicks,
-                            statCount: _leftStats.goalKicks,
+                            statCount: leftStats.goalKicks,
                           ),
                           const GameStatTitle(
                             title: 'Goal Kicks',
@@ -416,7 +339,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightGoalKicks,
-                            statCount: _rightStats.goalKicks,
+                            statCount: rightStats.goalKicks,
                           ),
                         ],
                       ),
@@ -428,7 +351,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftTackles,
-                            statCount: _leftStats.tackles,
+                            statCount: leftStats.tackles,
                           ),
                           const GameStatTitle(
                             title: 'Tackles',
@@ -436,7 +359,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightTackles,
-                            statCount: _rightStats.tackles,
+                            statCount: rightStats.tackles,
                           ),
                         ],
                       ),
@@ -448,7 +371,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftOffsides,
-                            statCount: _leftStats.offsides,
+                            statCount: leftStats.offsides,
                           ),
                           const GameStatTitle(
                             title: 'Offsides',
@@ -456,7 +379,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightOffsides,
-                            statCount: _rightStats.offsides,
+                            statCount: rightStats.offsides,
                           ),
                         ],
                       ),
@@ -468,7 +391,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftFouls,
-                            statCount: _leftStats.fouls,
+                            statCount: leftStats.fouls,
                           ),
                           const GameStatTitle(
                             title: 'Fouls',
@@ -476,7 +399,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightFouls,
-                            statCount: _rightStats.fouls,
+                            statCount: rightStats.fouls,
                           ),
                         ],
                       ),
@@ -488,7 +411,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftYellows,
-                            statCount: _leftStats.yellows,
+                            statCount: leftStats.yellows,
                           ),
                           const GameStatTitle(
                             title: 'Yellow Cards',
@@ -496,7 +419,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightYellows,
-                            statCount: _rightStats.yellows,
+                            statCount: rightStats.yellows,
                           ),
                         ],
                       ),
@@ -508,7 +431,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'LTR',
                             callback: _updateLeftReds,
-                            statCount: _leftStats.reds,
+                            statCount: leftStats.reds,
                           ),
                           const GameStatTitle(
                             title: 'Red Cards',
@@ -516,7 +439,7 @@ class _GameTrackerView extends State<GameTrackerView> {
                           StatCounter(
                             direction: 'RTL',
                             callback: _updateRightReds,
-                            statCount: _rightStats.reds,
+                            statCount: rightStats.reds,
                           ),
                         ],
                       ),
