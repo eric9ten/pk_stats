@@ -36,22 +36,14 @@ class _GameSetupViewState extends ConsumerState<GameSetupView> {
   @override
   void initState() {
     super.initState();
-    // ref.read(gameListProvider.notifier).update((state) => []);
-    print('GameSetupView initState: _selectedDate=$_selectedDate, _selectedTime=$_selectedTime, _locationController.text=${_locationController.text}');
     final games = ref.read(gameListProvider);
-     print('GameSetupView initState: games=$games');
     if (games.isNotEmpty) {
       final game = games.first;
-      print('Game: date=${game.date}, time=${game.time}, location=${game.location}');
       _teamANameController.text = game.teamA?.name ?? '';
       _teamBNameController.text = game.teamB?.name ?? '';
-      _locationController.text = game.location ?? 'TBD';
-      _selectedDate = game.date;
-      _selectedTime = game.time;
+      _locationController.text = 'TBD';
       _isAHome = game.isAHome ?? true;
     }  
-    // Ensure defaults are logged
-    print('After initState: _selectedDate=$_selectedDate, _selectedTime=$_selectedTime, _locationController.text=${_locationController.text}');
   }
 
   @override
@@ -198,9 +190,6 @@ class _GameSetupViewState extends ConsumerState<GameSetupView> {
     final teamB = teams[1];
     final isAHome = ref.watch(isAHomeProvider);
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-
-    print('DATE: ${_selectedDate}');
-    print('TIME: ${_selectedTime}');
 
     return Scaffold ( 
       appBar: AppBar (

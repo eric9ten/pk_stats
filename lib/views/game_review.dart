@@ -110,7 +110,7 @@ class GameReviewView extends ConsumerWidget {
           !ref.read(aIsDefendingRightProvider);
       Navigator.pop(context, 2);
     } else {
-      restartGame;
+      restartGame();
     }
   }
   
@@ -133,7 +133,8 @@ class GameReviewView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(formatter.format(game.date!),
+                      Text(
+                        game.date != null ? formatter.format(game.date!) : 'Date TBD',
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -152,14 +153,15 @@ class GameReviewView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(game.time!.format(context),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                              )
-                        ),
+                      Text(
+                        game.time != null ? game.time!.format(context) : 'Time TBD',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            )
+                      ),
                     ],
                   ),
                   const Row(
@@ -193,8 +195,8 @@ class GameReviewView extends ConsumerWidget {
                                       TableCell(
                                         child: 
                                         ColoredTitle(
-                                          title: game.teamA!.abbrev,
-                                          color: game.teamA!.color
+                                          title: game.teamA != null ? game.teamA!.abbrev : 'TBD',
+                                          color: game.teamA != null ? game.teamA!.color : 'FF000000',
                                         ),
                                       ),
                                       const TableCell(
@@ -204,8 +206,8 @@ class GameReviewView extends ConsumerWidget {
                                         verticalAlignment: TableCellVerticalAlignment.middle,
                                         child: 
                                         ColoredTitle(
-                                          title: game.teamB!.abbrev,
-                                          color: game.teamB!.color
+                                          title: game.teamB != null ? game.teamB!.abbrev : 'TBD',
+                                          color: game.teamB != null ? game.teamB!.color : 'FFFFFFFF',
                                         ),
                                       )
                                     ],
