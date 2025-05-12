@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pk_stats/views/game_setup.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:pk_stats/providers/providers.dart';
 import 'package:pk_stats/models/game_stats.dart';

@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:pk_stats/models/team.dart';
 import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/views/goal_setup.dart';
 import 'package:pk_stats/widgets/ad_banner.dart';
@@ -59,7 +58,7 @@ class _GameSetupViewState extends ConsumerState<GameSetupView> {
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? now,
-      firstDate: now,
+      firstDate: DateTime(now.year - 1, now.month, now.day),
       lastDate: DateTime(now.year + 1, now.month, now.day),
     );
     if (pickedDate != null) {

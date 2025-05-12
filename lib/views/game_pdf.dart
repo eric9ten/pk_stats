@@ -43,7 +43,6 @@ class GamePdfView extends ConsumerWidget {
             ),
             title: const Text('Game Report'),
             centerTitle: true,
-            leadingWidth: 20,
             backgroundColor: const Color.fromARGB(255, 250, 250, 250),
             foregroundColor: const Color.fromRGBO(10, 10, 10, 1)),
         body: games.isEmpty
@@ -65,8 +64,6 @@ class GamePdfView extends ConsumerWidget {
   Future<Uint8List> buildPdf(PdfPageFormat format, WidgetRef ref) async {
     final games = ref.read(gameListProvider);
     final teams = ref.read(teamListProvider);
-    final leftStats = ref.read(leftStatsProvider);
-    final rightStats = ref.read(rightStatsProvider);
     final isAHome = ref.read(isAHomeProvider);
     final aDefendingRight = ref.read(aIsDefendingRightProvider);
     final half = ref.read(gameHalfProvider);
@@ -78,6 +75,8 @@ class GamePdfView extends ConsumerWidget {
     }
 
     final game = games.first;
+    final leftStats = game.teamAStats!;
+    final rightStats = game.teamBStats!;
 
     final pw.Document doc = pw.Document();
     final pageTheme = await _gamePageTheme(format);
@@ -296,7 +295,8 @@ class GamePdfView extends ConsumerWidget {
                 width: 4,
               ),
               pw.Text(
-                '${time.hourOfPeriod}:${time.minute}',
+                '${time.hourOfPeriod}:${time.minute.toString().padLeft(2, '0')} ${time.period.name.toUpperCase()}',
+                overflow: pw.TextOverflow.visible,
                 style: const pw.TextStyle(
                   fontSize: 14,
                 ),
