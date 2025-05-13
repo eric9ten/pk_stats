@@ -9,7 +9,7 @@ import 'package:pk_stats/models/game.dart';
 import 'package:pk_stats/models/game_stats.dart';
 
 class HomeScreen extends ConsumerWidget {
-  HomeScreen({super.key, required this.title});
+  const HomeScreen({super.key, required this.title});
   final String title;
 
   @override
