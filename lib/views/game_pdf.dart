@@ -14,7 +14,6 @@ import 'package:pk_stats/providers/providers.dart';
 class GamePdfView extends ConsumerWidget {
   GamePdfView({super.key});
 
-  // final Game game;
   final PdfColor baseColor = PdfColor.fromHex('#222222');
 
   @override
@@ -67,6 +66,7 @@ class GamePdfView extends ConsumerWidget {
     final isAHome = ref.read(isAHomeProvider);
     final aDefendingRight = ref.read(aIsDefendingRightProvider);
     final half = ref.read(gameHalfProvider);
+    final location = games.first.location ?? 'TBD';
     final teamA = teams[0];
     final teamB = teams[1];
 
@@ -99,6 +99,7 @@ class GamePdfView extends ConsumerWidget {
                     isAHome: isAHome,
                     date: game.date!,
                     time: game.time!,
+                    location: location,
                   ),
                 ]),
             pw.Row(children: [
@@ -186,6 +187,7 @@ class GamePdfView extends ConsumerWidget {
     required bool isAHome,
     required DateTime date,
     required TimeOfDay time,
+    required String location,
   }) {
     final PdfColor teamAHexColor =
         PdfColor.fromHex(convertArgbToHex(teamA.color));
@@ -234,7 +236,7 @@ class GamePdfView extends ConsumerWidget {
                   )),
                 ),
               ),
-              pw.SizedBox(width: 12),
+              pw.SizedBox(width: 8),
               pw.Container(
                 width: 10,
                 child: pw.Text(
@@ -245,7 +247,7 @@ class GamePdfView extends ConsumerWidget {
                   ),
                 ),
               ),
-              pw.SizedBox(width: 12),
+              pw.SizedBox(width: 14),
               pw.Container(
                   child: teamB.color == 'FFFFFFFF'
                       ? _buildOutlinedText(teamB.name)
@@ -262,6 +264,13 @@ class GamePdfView extends ConsumerWidget {
             mainAxisAlignment: pw.MainAxisAlignment.center,
             crossAxisAlignment: pw.CrossAxisAlignment.center,
             children: [
+              pw.Icon(
+                pw.IconData(0xea2f),
+                size: 14,
+              ),
+              pw.SizedBox(
+                width: 2,
+              ),
               pw.Text(
                 isAHome ? 'Away' : 'Home',
                 style: const pw.TextStyle(
@@ -285,15 +294,15 @@ class GamePdfView extends ConsumerWidget {
                 ),
               ),
               pw.SizedBox(
-                width: 32,
+                width: 8,
               ),
-              pw.Icon(
-                const pw.IconData(0xe8b5),
-                size: 14,
-              ),
-              pw.SizedBox(
-                width: 4,
-              ),
+              // pw.Icon(
+              //   const pw.IconData(0xe8b5),
+              //   size: 14,
+              // ),
+              // pw.SizedBox(
+              //   width: 4,
+              // ),
               pw.Text(
                 '${time.hourOfPeriod}:${time.minute.toString().padLeft(2, '0')} ${time.period.name.toUpperCase()}',
                 overflow: pw.TextOverflow.visible,
@@ -301,11 +310,28 @@ class GamePdfView extends ConsumerWidget {
                   fontSize: 14,
                 ),
               ),
+              // pw.SizedBox(
+              //   width: 32,
+              // ),
+              // pw.Text(
+              //   isAHome ? 'Home' : 'Away',
+              //   style: const pw.TextStyle(
+              //     fontSize: 14,
+              //   ),
+              // ),
               pw.SizedBox(
                 width: 32,
               ),
+              pw.Icon(
+                pw.IconData(0xe0c8),
+                  color: PdfColor.fromHex('#434343'),
+                  size: 14,
+              ),
+              pw.SizedBox(
+                width: 4,
+              ),
               pw.Text(
-                isAHome ? 'Home' : 'Away',
+                location,
                 style: const pw.TextStyle(
                   fontSize: 14,
                 ),
@@ -321,13 +347,16 @@ class GamePdfView extends ConsumerWidget {
     required GameStats teamAStats,
     required GameStats teamBStats,
   }) {
+    var teamAColor = teamA.color.substring(2);
+    var teamBColor = teamB.color.substring(2);
+
     return pw.Expanded(
         child: pw.Container(
             decoration: pw.BoxDecoration(
                 color: PdfColor.fromHex('#efefef'),
                 border: pw.Border.all(
                   width: 1,
-                  color: PdfColor.fromHex('#424242'),
+                  color: PdfColor.fromHex('#434343'),
                   style: pw.BorderStyle.solid,
                 )),
             padding: const pw.EdgeInsets.all(8.0),
@@ -349,12 +378,19 @@ class GamePdfView extends ConsumerWidget {
                     width: 8,
                   ),
                   pw.Container(
-                    child: pw.Text(teamAStats.goals.toString()),
+                    child: pw.Text(
+                      teamAStats.goals.toString(),
+                      style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 14,
+                        color: teamA.color == 'FF000000' ? PdfColor.fromHex('#ffffff') : PdfColor.fromHex('#434343'),
+                      ),
+                    ),
                     decoration: pw.BoxDecoration(
-                        color: PdfColor.fromHex('#efefef'),
+                        color: PdfColor.fromHex(teamAColor), // PdfColor.fromHex('#efefef'),
                         border: pw.Border.all(
                           width: 1,
-                          color: PdfColor.fromHex('#424242'),
+                          color: PdfColor.fromHex(teamAColor), //PdfColor.fromHex('#434343'),
                           style: pw.BorderStyle.solid,
                         )),
                     padding: const pw.EdgeInsets.fromLTRB(8, 4, 8, 4),
@@ -372,12 +408,19 @@ class GamePdfView extends ConsumerWidget {
                     width: 32,
                   ),
                   pw.Container(
-                    child: pw.Text(teamBStats.goals.toString()),
+                    child: pw.Text(
+                      teamBStats.goals.toString(),
+                      style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 14,
+                        color: teamB.color == 'FF000000' ? PdfColor.fromHex('#ffffff') : PdfColor.fromHex('#434343'),
+                      ),
+                    ),
                     decoration: pw.BoxDecoration(
-                        color: PdfColor.fromHex('#efefef'),
+                        color: PdfColor.fromHex(teamBColor), //PdfColor.fromHex('#efefef'),
                         border: pw.Border.all(
                           width: 1,
-                          color: PdfColor.fromHex('#424242'),
+                          color: PdfColor.fromHex(teamBColor), //PdfColor.fromHex('#434343'),
                           style: pw.BorderStyle.solid,
                         )),
                     padding: const pw.EdgeInsets.fromLTRB(8, 4, 8, 4),
@@ -449,7 +492,7 @@ class GamePdfView extends ConsumerWidget {
                 width: 30,
                 decoration: pw.BoxDecoration(
                     border: pw.Border.all(
-                        color: PdfColor.fromHex('#424242'),
+                        color: PdfColor.fromHex('#434343'),
                         width: 2,
                         style: pw.BorderStyle.solid)),
                 alignment: pw.Alignment.center,
@@ -461,7 +504,7 @@ class GamePdfView extends ConsumerWidget {
                 width: 30,
                 decoration: pw.BoxDecoration(
                     border: pw.Border.all(
-                        color: PdfColor.fromHex('#424242'),
+                        color: PdfColor.fromHex('#434343'),
                         width: 2,
                         style: pw.BorderStyle.solid)),
                 alignment: pw.Alignment.center,
@@ -473,7 +516,7 @@ class GamePdfView extends ConsumerWidget {
                 width: 30,
                 decoration: pw.BoxDecoration(
                     border: pw.Border.all(
-                        color: PdfColor.fromHex('#424242'),
+                        color: PdfColor.fromHex('#434343'),
                         width: 2,
                         style: pw.BorderStyle.solid)),
                 alignment: pw.Alignment.center,
@@ -494,7 +537,7 @@ class GamePdfView extends ConsumerWidget {
                 width: 30,
                 decoration: pw.BoxDecoration(
                     border: pw.Border.all(
-                        color: PdfColor.fromHex('#424242'),
+                        color: PdfColor.fromHex('#434343'),
                         width: 2,
                         style: pw.BorderStyle.solid)),
                 alignment: pw.Alignment.center,
@@ -506,7 +549,7 @@ class GamePdfView extends ConsumerWidget {
                 width: 30,
                 decoration: pw.BoxDecoration(
                     border: pw.Border.all(
-                        color: PdfColor.fromHex('#424242'),
+                        color: PdfColor.fromHex('#434343'),
                         width: 2,
                         style: pw.BorderStyle.solid)),
                 alignment: pw.Alignment.center,
@@ -518,7 +561,7 @@ class GamePdfView extends ConsumerWidget {
                 width: 30,
                 decoration: pw.BoxDecoration(
                     border: pw.Border.all(
-                        color: PdfColor.fromHex('#424242'),
+                        color: PdfColor.fromHex('#434343'),
                         width: 2,
                         style: pw.BorderStyle.solid)),
                 alignment: pw.Alignment.center,

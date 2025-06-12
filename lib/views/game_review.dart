@@ -69,9 +69,10 @@ class GameReviewView extends ConsumerWidget {
       ref.read(gameHalfProvider.notifier).state = 1;
       ref.read(leftStatsProvider.notifier).state = GameStats();
       ref.read(rightStatsProvider.notifier).state = GameStats();
-      
+      ref.read(locationProvider.notifier).state = 'TBD';
+
     }
-  
+
   void restartGame() {
     showDialog(
       context: context,
@@ -248,7 +249,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 24,
@@ -296,7 +297,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 20,
@@ -340,7 +341,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 20,
@@ -375,108 +376,7 @@ class GameReviewView extends ConsumerWidget {
                                           ),
                                         )
                                       ],
-                                    ),                          
-                                    TableRow(
-                                      decoration: const BoxDecoration(
-                                        color: Color.fromRGBO(255, 165, 0, 0.2)
-                                      ),
-                                      children: <Widget>[
-                                        TableCell(
-                                          child: Text(
-                                            game.teamAStats!.corners.toString(),
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .copyWith(
-                                                  color: Theme.of(context).colorScheme.secondary,
-                                                  fontSize: 20,
-                                                )
-                                          ),
-                                        ),
-                                        TableCell(
-                                          child: SizedBox(
-                                            height: 45,
-                                            child: Center(
-                                              child: Text( 
-                                                'CORNER KICKS',
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .copyWith(
-                                                    color: Theme.of(context).colorScheme.secondary,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TableCell(
-                                          child: Text(
-                                            game.teamBStats!.corners.toString(),
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(
-                                                  color: Theme.of(context).colorScheme.secondary,
-                                                  fontSize: 20,
-                                                ),
-                                          ),
-                                        )
-                                      ],
-                                    ),                          
-                                    TableRow(
-                                      children: <Widget>[
-                                        TableCell(
-                                          child: Text(
-                                            game.teamAStats!.goalKicks.toString(),
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .copyWith(
-                                                  color: Theme.of(context).colorScheme.secondary,
-                                                  fontSize: 20,
-                                                )
-                                          ),
-                                        ),
-                                        TableCell(
-                                          child: SizedBox(
-                                            height: 45,
-                                            child: Center(
-                                              child: Text( 
-                                                  'GOAL KICKS',
-                                                  textAlign: TextAlign.center,
-                                                  style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .copyWith(
-                                                      color: Theme.of(context).colorScheme.secondary,
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TableCell(
-                                          child: Text(
-                                            game.teamBStats!.goalKicks.toString(),
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(
-                                                  color: Theme.of(context).colorScheme.secondary,
-                                                  fontSize: 20,
-                                                )
-                                          ),
-                                        )
-                                      ],
-                                    ),                          
+                                    ),                                                    
                                     TableRow(
                                       decoration: const BoxDecoration(
                                         color: Color.fromRGBO(255, 165, 0, 0.2)
@@ -488,7 +388,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 20,
@@ -503,7 +403,7 @@ class GameReviewView extends ConsumerWidget {
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyMedium!
+                                                  .titleMedium!
                                                   .copyWith(
                                                     color: Theme.of(context).colorScheme.secondary,
                                                     fontSize: 20,
@@ -527,7 +427,109 @@ class GameReviewView extends ConsumerWidget {
                                           ),
                                         )
                                       ],
-                                    ),                          
+                                    ),
+                                    
+                                    TableRow(
+                                      children: <Widget>[
+                                        TableCell(
+                                          child: Text(
+                                            game.teamAStats!.corners.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                  color: Theme.of(context).colorScheme.secondary,
+                                                  fontSize: 20,
+                                                )
+                                          ),
+                                        ),
+                                        TableCell(
+                                          child: SizedBox(
+                                            height: 45,
+                                            child: Center(
+                                              child: Text( 
+                                                'CORNER KICKS',
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(
+                                                    color: Theme.of(context).colorScheme.secondary,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        TableCell(
+                                          child: Text(
+                                            game.teamBStats!.corners.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                  color: Theme.of(context).colorScheme.secondary,
+                                                  fontSize: 20,
+                                                ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    TableRow(
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(255, 165, 0, 0.2)
+                                      ),
+                                      children: <Widget>[
+                                        TableCell(
+                                          child: Text(
+                                            game.teamAStats!.goalKicks.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                  color: Theme.of(context).colorScheme.secondary,
+                                                  fontSize: 20,
+                                                )
+                                          ),
+                                        ),
+                                        TableCell(
+                                          child: SizedBox(
+                                            height: 45,
+                                            child: Center(
+                                              child: Text( 
+                                                  'GOAL KICKS',
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                      color: Theme.of(context).colorScheme.secondary,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        TableCell(
+                                          child: Text(
+                                            game.teamBStats!.goalKicks.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                  color: Theme.of(context).colorScheme.secondary,
+                                                  fontSize: 20,
+                                                )
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                     TableRow(
                                       children: <Widget>[
                                         TableCell(
@@ -536,7 +538,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 20,
@@ -551,7 +553,7 @@ class GameReviewView extends ConsumerWidget {
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyMedium!
+                                                  .titleMedium!
                                                   .copyWith(
                                                     color: Theme.of(context).colorScheme.secondary,
                                                     fontSize: 20,
@@ -587,7 +589,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 20,
@@ -602,7 +604,7 @@ class GameReviewView extends ConsumerWidget {
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyMedium!
+                                                  .titleMedium!
                                                   .copyWith(
                                                     color: Theme.of(context).colorScheme.secondary,
                                                     fontSize: 20,
@@ -642,7 +644,7 @@ class GameReviewView extends ConsumerWidget {
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyMedium!
+                                                  .titleMedium!
                                                   .copyWith(
                                                     color: Theme.of(context).colorScheme.secondary,
                                                     fontSize: 20,
@@ -670,7 +672,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 20,
@@ -711,7 +713,7 @@ class GameReviewView extends ConsumerWidget {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium!
+                                                .titleMedium!
                                                 .copyWith(
                                                   color: Theme.of(context).colorScheme.secondary,
                                                   fontSize: 20,

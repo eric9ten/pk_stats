@@ -25,7 +25,7 @@ class GameSetupView extends ConsumerStatefulWidget {
 class _GameSetupViewState extends ConsumerState<GameSetupView> {
   final _teamANameController = TextEditingController();
   final _teamBNameController = TextEditingController();
-  final _locationController = TextEditingController(text: 'TBD'); // Default to TBD
+  final _locationController = TextEditingController(text: 'TBD');
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   bool _isAHome = true;
@@ -36,13 +36,19 @@ class _GameSetupViewState extends ConsumerState<GameSetupView> {
   void initState() {
     super.initState();
     final games = ref.read(gameListProvider);
+    final location = ref.read(locationProvider);
     if (games.isNotEmpty) {
       final game = games.first;
       _teamANameController.text = game.teamA?.name ?? '';
       _teamBNameController.text = game.teamB?.name ?? '';
-      _locationController.text = 'TBD';
+      _locationController.text = location;
       _isAHome = game.isAHome ?? true;
-    }  
+    }
+
+    _locationController.addListener(() {
+      final value = _locationController.text.trim();
+      ref.read(locationProvider.notifier).state = value.isEmpty ? 'TBD' : value;
+  });
   }
 
   @override
@@ -123,7 +129,8 @@ class _GameSetupViewState extends ConsumerState<GameSetupView> {
     final teams = ref.read(teamListProvider);
     final teamA = teams[0];
     final teamB = teams[1];
-    final location = _locationController.text.trim().isEmpty ? 'TBD' : _locationController.text.trim();
+    final location = ref.read(locationProvider);
+    // final location = _locationController.text.trim().isEmpty ? 'TBD' : _locationController.text.trim();
     final isAHome = ref.read(isAHomeProvider);
     final date = _selectedDate;
     final time = _selectedTime;
@@ -173,9 +180,10 @@ class _GameSetupViewState extends ConsumerState<GameSetupView> {
     ref.read(rightStatsProvider.notifier).state = GameStats();
     ref.read(gameHalfProvider.notifier).state = 1;
     ref.read(aIsDefendingRightProvider.notifier).state = false;
+    ref.read(locationProvider.notifier).state = 'TBD';
 
     Navigator.push(
-      context, 
+      context,
       MaterialPageRoute(
         builder: (ctx) => const GoalSetupView(),
       )

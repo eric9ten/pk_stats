@@ -37,6 +37,7 @@ final teamListProvider = StateProvider<List<Team>>((ref) => [
     ]);
 
 final isAHomeProvider = StateProvider<bool>((ref) => false);
+final locationProvider = StateProvider<String>((ref) => 'TBD');
 
 final aIsDefendingRightProvider = StateProvider<bool>((ref) => false);
 

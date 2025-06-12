@@ -62,7 +62,6 @@ class _StatCounter extends State<StatCounter>{
   
   const double textWidth = 50;
   const double statTextWidth = 20;
-  const double statTextPadding = 5;
 
   return Row(
         mainAxisAlignment: MainAxisAlignment.end,

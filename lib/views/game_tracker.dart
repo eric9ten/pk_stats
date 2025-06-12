@@ -308,6 +308,26 @@ Game _updateGameStats(Game game, int gameHalf) {
                         children: [
                           StatCounter(
                             direction: 'LTR',
+                            callback: _updateLeftTackles,
+                            statCount: leftStats.tackles,
+                          ),
+                          const GameStatTitle(
+                            title: 'Tackles',
+                          ),
+                          StatCounter(
+                            direction: 'RTL',
+                            callback: _updateRightTackles,
+                            statCount: rightStats.tackles,
+                          ),
+                        ],
+                      ),
+                      const Row (children: [ SizedBox(height: 10,)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatCounter(
+                            direction: 'LTR',
                             callback: _updateLeftCorners,
                             statCount: leftStats.corners,
                           ),
@@ -338,26 +358,6 @@ Game _updateGameStats(Game game, int gameHalf) {
                             direction: 'RTL',
                             callback: _updateRightGoalKicks,
                             statCount: rightStats.goalKicks,
-                          ),
-                        ],
-                      ),
-                      const Row (children: [ SizedBox(height: 10,)]),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          StatCounter(
-                            direction: 'LTR',
-                            callback: _updateLeftTackles,
-                            statCount: leftStats.tackles,
-                          ),
-                          const GameStatTitle(
-                            title: 'Tackles',
-                          ),
-                          StatCounter(
-                            direction: 'RTL',
-                            callback: _updateRightTackles,
-                            statCount: rightStats.tackles,
                           ),
                         ],
                       ),

@@ -1,2 +1,0 @@
-C:/Users/elarsen/Documents/Playground/pk_stats/android/app/.cxx/Debug/2z5j1y4j/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/elarsen/Documents/Playground/pk_stats/android/app/.cxx/Debug/2z5j1y4j/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -1,2 +1,0 @@
-C:/Users/elarsen/Documents/Playground/pk_stats/android/app/.cxx/RelWithDebInfo/1r1m711u/arm64-v8a/CMakeFiles/edit_cache.dir
-C:/Users/elarsen/Documents/Playground/pk_stats/android/app/.cxx/RelWithDebInfo/1r1m711u/arm64-v8a/CMakeFiles/rebuild_cache.dir

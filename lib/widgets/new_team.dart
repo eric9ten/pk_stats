@@ -18,8 +18,8 @@ class NewTeam extends ConsumerStatefulWidget {
 
 class _NewTeamState extends ConsumerState<NewTeam> {
   String _abbrev = '';
-  late TextEditingController _nameController; // = TextEditingController(text:'To Be Announced');
-  late TextEditingController _abbrevController; // = TextEditingController(text:'TBA');
+  late TextEditingController _nameController;
+  late TextEditingController _abbrevController;
   late Color _teamColor;
 
   void _updateTeam() {
