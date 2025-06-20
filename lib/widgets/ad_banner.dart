@@ -7,9 +7,11 @@ class MyBannerAdWidget extends StatefulWidget {
   final AdSize adSize;
   final String adUnitId = Platform.isAndroid
       // Android
-      ? 'ca-app-pub-3940256099942544/6300978111'
+      //? 'ca-app-pub-3940256099942544/6300978111'
+      ? 'ca-app-pub-1673198442444627~4192795440'
       // iOS
-      : 'ca-app-pub-3940256099942544/2934735716';
+      //: 'ca-app-pub-3940256099942544/2934735716';
+      : 'ca-app-pub-1673198442444627~2018197861';
 
   MyBannerAdWidget({
     super.key,
