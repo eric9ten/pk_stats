@@ -473,7 +473,7 @@ Game _updateGameStats(Game game, int gameHalf) {
                       const Spacer(
                         flex: 1,
                       ),
-                      MyBannerAdWidget(),
+                      BannerAdWidget(),
                     ],
                   ),
                 ),

@@ -417,7 +417,7 @@ class _GameSetupViewState extends ConsumerState<GameSetupView> {
                           const Spacer(
                             flex: 1,
                           ),
-                          MyBannerAdWidget(),
+                          BannerAdWidget(),
                         ],
                       ),
                     ),

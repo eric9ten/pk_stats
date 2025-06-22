@@ -784,7 +784,7 @@ class GameReviewView extends ConsumerWidget {
                         const SizedBox(
                           height: 16,
                         ),
-                        MyBannerAdWidget(),
+                        BannerAdWidget(),
                       ],
                     ),
                   ),

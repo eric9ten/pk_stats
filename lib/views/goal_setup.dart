@@ -167,7 +167,7 @@ class _GoalSetupViewState extends ConsumerState<GoalSetupView> {
                 const Spacer(
                   flex: 1,
                 ),
-                MyBannerAdWidget(),
+                BannerAdWidget(),
               ],
             ),
           ),

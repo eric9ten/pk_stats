@@ -2,27 +2,26 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-class MyBannerAdWidget extends StatefulWidget {
+class BannerAdWidget extends StatefulWidget {
   /// The requested size of the banner. Defaults to [AdSize.banner].
   final AdSize adSize;
   final String adUnitId = Platform.isAndroid
       // Android
-      //? 'ca-app-pub-3940256099942544/6300978111'
-      ? 'ca-app-pub-1673198442444627~4192795440'
+      // ? 'ca-app-pub-3940256099942544/6300978111'
+      ? 'ca-app-pub-1673198442444627/9063920111'
       // iOS
-      //: 'ca-app-pub-3940256099942544/2934735716';
-      : 'ca-app-pub-1673198442444627~2018197861';
+      : 'ca-app-pub-3940256099942544/2934735716';
 
-  MyBannerAdWidget({
+  BannerAdWidget({
     super.key,
     this.adSize = AdSize.banner,
   });
 
   @override
-  State<MyBannerAdWidget> createState() => _MyBannerAdWidgetState();
+  State<BannerAdWidget> createState() => _BannerAdWidgetState();
 }
 
-class _MyBannerAdWidgetState extends State<MyBannerAdWidget> {
+class _BannerAdWidgetState extends State<BannerAdWidget> {
   /// The banner ad to show. This is `null` until the ad is actually loaded.
   BannerAd? _bannerAd;
 
